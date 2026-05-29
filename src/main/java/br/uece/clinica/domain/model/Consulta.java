@@ -1,4 +1,5 @@
 package br.uece.clinica.domain.model;
 
-public class Consulta {
+public class Consulta extends BaseEntity {
+
 }

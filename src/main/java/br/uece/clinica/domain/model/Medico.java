@@ -1,4 +1,5 @@
 package br.uece.clinica.domain.model;
 
-public abstract class Medico {
+public abstract class Medico extends BaseEntity {
+
 }

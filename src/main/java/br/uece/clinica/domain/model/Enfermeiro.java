@@ -1,4 +1,5 @@
 package br.uece.clinica.domain.model;
 
-public class Enfermeiro {
+public class Enfermeiro extends BaseEntity {
+
 }

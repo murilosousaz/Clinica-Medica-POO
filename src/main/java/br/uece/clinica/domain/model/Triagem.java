@@ -1,4 +1,5 @@
 package br.uece.clinica.domain.model;
 
-public class Triagem {
+public class Triagem extends BaseEntity {
+
 }

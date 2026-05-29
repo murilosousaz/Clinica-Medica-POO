@@ -1,4 +1,5 @@
 package br.uece.clinica.domain.model;
 
-public class BaseEntity {
+public abstract class BaseEntity {
+
 }

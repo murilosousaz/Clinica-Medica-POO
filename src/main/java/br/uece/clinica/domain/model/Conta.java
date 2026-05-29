@@ -1,4 +1,5 @@
 package br.uece.clinica.domain.model;
 
-public class Conta {
+public class Conta extends BaseEntity {
+
 }
