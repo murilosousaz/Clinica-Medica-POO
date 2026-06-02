@@ -1,32 +1,23 @@
 package br.uece.clinica.application.dto;
 
-import br.uece.clinica.domain.model.Enfermeiro;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CreateEnfermeiroRequest {
-    @NotBlank(message = "Nome é obrigatório")
+
+    @NotBlank
     private String nome;
 
-    @NotBlank(message = "COREN é obrigatório")
+    @NotBlank
     private String coren;
 
-    @NotBlank(message = "Telefone é obrigatório")
-    private String telefone;
+    @NotBlank
+    private String turno;
 
-    @Email(message = "Email deve ser válido")
-    private String email;
-
-    @NotBlank(message = "Especialidade é obrigatória")
-    private String especialidade;
-
-    @NotNull(message = "Turno é obrigatório")
-    private Enfermeiro.Turno turno;
+    private Integer anosExperiencia;
 }
