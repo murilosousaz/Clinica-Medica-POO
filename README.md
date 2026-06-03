@@ -714,27 +714,6 @@ docker compose up -d
 ./mvnw spring-boot:run
 ```
 
-### Ver status do Git
-
-```bash
-git status
-```
-
-### Criar commit
-
-```bash
-git add .
-git commit -m "Atualiza sistema de clínica médica"
-```
-
-### Enviar para o GitHub
-
-```bash
-git push origin main
-```
-
----
-
 ## Possíveis Problemas
 
 ### Erro de conexão com PostgreSQL
