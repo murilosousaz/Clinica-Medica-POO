@@ -794,8 +794,8 @@ Projeto desenvolvido para fins acadêmicos na disciplina **Programação Estrutu
 Equipe:
 
 - Murilo Sousa
-- Integrante 2
-- Integrante 3
+- Lucas Mendes
+- Maycon Alves
 
 ---
 
