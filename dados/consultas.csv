@@ -1,0 +1,3 @@
+id;pacienteCpf;pacienteNome;medicoCrm;medicoNome;dataHora;status;sintomas;diagnostico;tratamento;medicamentos;exames;valorPago;observacoes
+7290f9a0-3b03-43aa-b657-ddac42227cc9;12345678900;João da Silva;12345;Dr. Hans Chucrute;2026-06-11T23:30;AGENDADA;;;;;;0.00;
+a773a99a-c958-485e-ba88-3badb16da86c;06681285341;Murilo Sousa de Assis;12345;Dr. Hans Chucrute;2002-06-23T06:04;AGENDADA;;;;;;0.00;

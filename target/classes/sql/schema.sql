@@ -7,6 +7,10 @@ CREATE TABLE IF NOT EXISTS medico (
                                       valor_consulta_particular NUMERIC(10,2) NOT NULL,
                                       telefone VARCHAR(20),
                                       email VARCHAR(100),
+                                      tipo VARCHAR(30),
+                                      realiza_ecocardiograma BOOLEAN DEFAULT false,
+                                      idade_maxima_paciente INT,
+                                      realiza_procedimentos_esteticos BOOLEAN DEFAULT false,
                                       ativo BOOLEAN DEFAULT true,
                                       data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                       data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -119,6 +123,25 @@ CREATE TABLE IF NOT EXISTS consulta_exames (
                                                exame VARCHAR(255) NOT NULL
 );
 
+
+-- Tabela de Lista de Espera
+CREATE TABLE IF NOT EXISTS lista_espera (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    paciente_id UUID NOT NULL REFERENCES paciente(id),
+    medico_id UUID NOT NULL REFERENCES medico(id),
+    data_consulta DATE NOT NULL,
+    horario_desejado VARCHAR(10),
+    observacoes TEXT,
+    status VARCHAR(20) NOT NULL DEFAULT 'ESPERANDO',
+    notificacao TEXT,
+    ativo BOOLEAN DEFAULT true,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_lista_espera_medico_data ON lista_espera(medico_id, data_consulta);
+CREATE INDEX idx_lista_espera_status ON lista_espera(status);
+
 -- Tabela de Avaliações
 CREATE TABLE IF NOT EXISTS avaliacao (
                                          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -155,11 +178,11 @@ CREATE INDEX idx_conta_vencimento ON conta(data_vencimento);
 -- Dados Iniciais (Exemplo)
 
 -- Inserir Médicos Exemplo
-INSERT INTO medico (nome, crm, especialidade, valor_consulta_particular, telefone, email)
+INSERT INTO medico (nome, crm, especialidade, tipo, valor_consulta_particular, telefone, email)
 VALUES
-    ('Dr. Carlos Mendes', 'CRM12345SP', 'CARDIOLOGISTA', 150.00, '85987654321', 'carlos@clinica.com'),
-    ('Dra. Ana Silva', 'CRM12346SP', 'PEDIATRA', 100.00, '85987654322', 'ana@clinica.com'),
-    ('Dr. João Santos', 'CRM12347SP', 'DERMATOLOGISTA', 120.00, '85987654323', 'joao@clinica.com')
+    ('Dr. Carlos Mendes', 'CRM12345SP', 'Cardiologia', 'CARDIOLOGISTA', 150.00, '85987654321', 'carlos@clinica.com'),
+    ('Dra. Ana Silva', 'CRM12346SP', 'Pediatria', 'PEDIATRA', 100.00, '85987654322', 'ana@clinica.com'),
+    ('Dr. João Santos', 'CRM12347SP', 'Dermatologia', 'DERMATOLOGISTA', 120.00, '85987654323', 'joao@clinica.com')
 ON CONFLICT DO NOTHING;
 
 -- Inserir Enfermeiros Exemplo
@@ -171,7 +194,7 @@ VALUES
 ON CONFLICT DO NOTHING;
 
 -- Inserir Pacientes Exemplo
-INSERT INTO paciente (nome, idade, cpf, telefone, email, plano_saude_nome, plano_ativo)
+INSERT INTO paciente (nome, idade, cpf, telefone, email, plano_saude_nome, plano_saude_ativo)
 VALUES
     ('Pedro Santos', 45, '12345678901', '85988776655', 'pedro@email.com', 'Unimed', true),
     ('Julia Oliveira', 28, '98765432100', '85988776656', 'julia@email.com', 'Bradesco Saúde', true),

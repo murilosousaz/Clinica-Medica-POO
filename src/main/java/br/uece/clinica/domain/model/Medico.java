@@ -105,7 +105,7 @@ public abstract class Medico extends BaseEntity {
     }
 
     public int getMaxPacientesPorDia() {
-        return 20;
+        return 3;
     }
 
     public abstract String getTipoEspecialidade();

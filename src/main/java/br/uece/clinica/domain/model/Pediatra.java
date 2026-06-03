@@ -33,6 +33,12 @@ public class Pediatra extends Medico {
         super(nome, crm, "Pediatria", telefone, email, valorConsultaParticular);
     }
 
+
+    @Override
+    public int getMaxPacientesPorDia() {
+        return 2;
+    }
+
     @Override
     public String getTipoEspecialidade() {
         return "Pediatria";

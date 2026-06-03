@@ -1,0 +1,3 @@
+id;nome;idade;cpf;telefone;email;plano;planoAtivo
+42e15523-4af4-4a45-8d30-f107705fa58c;João da Silva;;12345678900;85999999999;joao@email.com;Não tenho;false
+76a6016d-5630-4e19-ae89-1d97a1df808f;Murilo Sousa de Assis;21;06681285341;(85)98416-0084;murilosz085@gmail.com;Unimed;true

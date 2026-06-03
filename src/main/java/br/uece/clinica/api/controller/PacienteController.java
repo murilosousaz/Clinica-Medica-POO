@@ -2,7 +2,9 @@ package br.uece.clinica.api.controller;
 
 import br.uece.clinica.application.dto.CreatePacienteRequest;
 import br.uece.clinica.application.dto.PacienteResponse;
+import br.uece.clinica.application.dto.ConsultaResponse;
 import br.uece.clinica.application.service.PacienteService;
+import br.uece.clinica.application.service.ConsultaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import java.util.UUID;
 public class PacienteController {
 
     private final PacienteService pacienteService;
+    private final ConsultaService consultaService;
 
     @GetMapping
     public List<PacienteResponse> listarTodos() {
@@ -26,6 +29,11 @@ public class PacienteController {
     @GetMapping("/{id}")
     public PacienteResponse buscarPorId(@PathVariable UUID id) {
         return pacienteService.buscarPorId(id);
+    }
+
+    @GetMapping("/{id}/prontuario")
+    public List<ConsultaResponse> prontuario(@PathVariable UUID id) {
+        return consultaService.prontuarioPaciente(id);
     }
 
     @GetMapping("/buscar")
