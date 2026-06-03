@@ -18,6 +18,11 @@
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/application/dto/PacienteResponse.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/application/dto/TriagemRequest.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/application/dto/TriagemResponse.java
+/home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/application/mapper/ConsultaMapper.java
+/home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/application/mapper/EnfermeiroMapper.java
+/home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/application/mapper/MedicoMapper.java
+/home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/application/mapper/PacienteMapper.java
+/home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/application/mapper/TriagemMapper.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/application/service/AvaliacaoService.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/application/service/ConsultaService.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/application/service/ContaService.java

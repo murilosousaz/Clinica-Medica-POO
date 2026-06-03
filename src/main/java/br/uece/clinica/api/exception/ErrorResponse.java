@@ -12,7 +12,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder  // ← ADICIONAR ISSO
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
     private LocalDateTime timestamp;

@@ -65,8 +65,8 @@ public class Paciente extends BaseEntity {
         return planoSaude != null && planoSaude.temCobertura();
     }
 
-    public long totalConsultasRealizadas() {
-        return consultas.stream()
+    private int contarConsultasRealizadas() {
+        return (int) historicoConsultas.stream()
                 .filter(c -> c.getStatus() == Consulta.StatusConsulta.REALIZADA)
                 .count();
     }

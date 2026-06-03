@@ -2,12 +2,14 @@ package br.uece.clinica.domain.valueobject;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Value;
+import lombok.Setter;
 
 @Embeddable
-@Value
-@NoArgsConstructor(force = true)
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class PlanoSaude {
     private String nome;
