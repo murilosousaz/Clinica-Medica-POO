@@ -112,7 +112,7 @@ public class ConsultaService {
                 .pacienteNome(consulta.getPaciente().getNome())
                 .medicoId(consulta.getMedico().getId())
                 .medicoNome(consulta.getMedico().getNome())
-                .dataHora(consulta.getDataConsulta())
+                .dataHora(consulta.getDataHora())
                 .status(consulta.getStatus().toString())
                 .observacoes(consulta.getObservacoes())
                 .build();

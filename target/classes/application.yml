@@ -10,7 +10,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/clinica
+    url: jdbc:postgresql://localhost:5433/clinica
     username: clinica_user
     password: clinica_pass
     driver-class-name: org.postgresql.Driver
@@ -22,8 +22,6 @@ spring:
 
 server:
   port: 8080
-  servlet:
-    context-path: /api
 
 logging:
   level:

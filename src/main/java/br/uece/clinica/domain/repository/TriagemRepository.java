@@ -20,7 +20,7 @@ public interface TriagemRepository extends JpaRepository<Triagem, UUID> {
     List<Triagem> findByEnfermeiro(Enfermeiro enfermeiro);
 
     @Query("SELECT t FROM Triagem t WHERE CAST(t.dataCriacao AS DATE) = :data ORDER BY t.prioridade ASC")
-    List<Triagem> findTriagensDoiaDia(@Param("data") LocalDate data);
+    List<Triagem> findTriagensDoDia(@Param("data") LocalDate data);
 
     @Query("SELECT t FROM Triagem t WHERE t.prioridade = :prioridade AND CAST(t.dataCriacao AS DATE) = CURRENT_DATE")
     List<Triagem> findByPrioridadeHoje(@Param("prioridade") PrioridadeSUS prioridade);

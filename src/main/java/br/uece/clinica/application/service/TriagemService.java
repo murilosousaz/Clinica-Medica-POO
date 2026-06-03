@@ -1,6 +1,11 @@
 package br.uece.clinica.application.service;
 
-import br.uece.clinica.domain.model.*;
+import br.uece.clinica.application.dto.TriagemRequest;
+import br.uece.clinica.application.dto.TriagemResponse;
+import br.uece.clinica.application.mapper.TriagemMapper;
+import br.uece.clinica.domain.model.Enfermeiro;
+import br.uece.clinica.domain.model.Paciente;
+import br.uece.clinica.domain.model.Triagem;
 import br.uece.clinica.domain.repository.EnfermeiroRepository;
 import br.uece.clinica.domain.repository.PacienteRepository;
 import br.uece.clinica.domain.repository.TriagemRepository;
@@ -10,7 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,63 +34,72 @@ public class TriagemService {
             Comparator.comparingInt((Triagem t) -> t.getPrioridade().ordinal())
     );
 
-    public Triagem registrarTriagem(UUID pacienteId, UUID enfermeiroId, PrioridadeSUS prioridade,
-                                    String queijaPrincipal, String pressaoArterial, Integer frequenciaCardiaca,
-                                    Double temperatura, Integer frequenciaRespiratoria, Double peso, Double altura) {
-
-        Paciente paciente = pacienteRepository.findById(pacienteId)
+    public TriagemResponse registrar(TriagemRequest request) {
+        Paciente paciente = pacienteRepository.findById(request.getPacienteId())
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
-
-        Enfermeiro enfermeiro = enfermeiroRepository.findById(enfermeiroId)
+        Enfermeiro enfermeiro = enfermeiroRepository.findById(request.getEnfermeiroId())
                 .orElseThrow(() -> new RuntimeException("Enfermeiro não encontrado"));
 
         if (!enfermeiro.podeRealizarTriagem()) {
             throw new RuntimeException("Enfermeiro não está em turno ou inativo");
         }
 
-        Triagem triagem = new Triagem(paciente, enfermeiro, prioridade, queijaPrincipal);
-        triagem.setPressaoArterial(pressaoArterial);
-        triagem.setFrequenciaCardiaca(frequenciaCardiaca);
-        triagem.setTemperatura(temperatura);
-        triagem.setFrequenciaRespiratoria(frequenciaRespiratoria);
-        triagem.setPeso(peso);
-        triagem.setAltura(altura);
-
-        Triagem saved = triagemRepository.save(triagem);
-        enfermeiro.registrarTriagem(saved);
+        Triagem triagem = TriagemMapper.toEntity(request, paciente, enfermeiro);
+        Triagem salva = triagemRepository.save(triagem);
+        enfermeiro.registrarTriagem(salva);
         enfermeiroRepository.save(enfermeiro);
-
-        filaTriagem.offer(saved);
-        return saved;
+        filaTriagem.offer(salva);
+        return TriagemMapper.toResponse(salva);
     }
 
     @Transactional(readOnly = true)
-    public Triagem obterProximaDaFila() {
-        return filaTriagem.peek();
+    public TriagemResponse obterProximaDaFila() {
+        Triagem triagem = filaTriagem.peek();
+        if (triagem == null) {
+            throw new RuntimeException("Fila vazia");
+        }
+        return TriagemMapper.toResponse(triagem);
     }
 
-    public Triagem chamarProximoPaciente() {
+    public TriagemResponse chamarProximoPaciente() {
         Triagem triagem = filaTriagem.poll();
         if (triagem == null) {
             throw new RuntimeException("Fila vazia");
         }
-        return triagem;
+        return TriagemMapper.toResponse(triagem);
     }
 
     @Transactional(readOnly = true)
-    public List<Triagem> listarTriagensDoiaDia() {
-        return triagemRepository.findTriagensDoiaDia(LocalDate.now());
+    public List<TriagemResponse> listarTodas() {
+        return triagemRepository.findAll().stream()
+                .map(TriagemMapper::toResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<Triagem> listarTriagensEmergenciaHoje() {
-        return triagemRepository.findTriagensEmergenciaHoje();
+    public TriagemResponse buscarPorId(UUID id) {
+        Triagem triagem = triagemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Triagem não encontrada"));
+        return TriagemMapper.toResponse(triagem);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TriagemResponse> listarTriagensDoDia() {
+        return triagemRepository.findTriagensDoDia(LocalDate.now()).stream()
+                .map(TriagemMapper::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<TriagemResponse> listarTriagensEmergenciaHoje() {
+        return triagemRepository.findTriagensEmergenciaHoje().stream()
+                .map(TriagemMapper::toResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public Map<PrioridadeSUS, List<Triagem>> agruparTriagensHojePorPrioridade() {
-        List<Triagem> triagensHoje = listarTriagensDoiaDia();
-        return triagensHoje.stream()
+        return triagemRepository.findTriagensDoDia(LocalDate.now()).stream()
                 .collect(Collectors.groupingBy(Triagem::getPrioridade));
     }
 
@@ -90,35 +108,6 @@ public class TriagemService {
         Enfermeiro enfermeiro = enfermeiroRepository.findById(enfermeiroId)
                 .orElseThrow(() -> new RuntimeException("Enfermeiro não encontrado"));
         return triagemRepository.contarTriagensRealizadasHoje(enfermeiro);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Triagem> buscarTriagensEnfermeiro(UUID enfermeiroId) {
-        Enfermeiro enfermeiro = enfermeiroRepository.findById(enfermeiroId)
-                .orElseThrow(() -> new RuntimeException("Enfermeiro não encontrado"));
-        return triagemRepository.findByEnfermeiro(enfermeiro);
-    }
-
-    public void atualizarTriagem(UUID triagemId, String pressaoArterial, Integer frequenciaCardiaca,
-                                 Double temperatura, Integer frequenciaRespiratoria, Double peso, Double altura) {
-        Triagem triagem = triagemRepository.findById(triagemId)
-                .orElseThrow(() -> new RuntimeException("Triagem não encontrada"));
-
-        triagem.setPressaoArterial(pressaoArterial);
-        triagem.setFrequenciaCardiaca(frequenciaCardiaca);
-        triagem.setTemperatura(temperatura);
-        triagem.setFrequenciaRespiratoria(frequenciaRespiratoria);
-        triagem.setPeso(peso);
-        triagem.setAltura(altura);
-
-        triagemRepository.save(triagem);
-    }
-
-    @Transactional(readOnly = true)
-    public int tamanhoFilaPorPrioridade(PrioridadeSUS prioridade) {
-        return (int) filaTriagem.stream()
-                .filter(t -> t.getPrioridade() == prioridade)
-                .count();
     }
 
     @Transactional(readOnly = true)

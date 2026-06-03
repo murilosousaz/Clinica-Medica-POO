@@ -16,6 +16,15 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Dermatologista extends Medico {
 
+
+    public Dermatologista(String nome, String crm) {
+        this(nome, crm, null, null, BigDecimal.ZERO);
+    }
+
+    public Dermatologista(String nome, String crm, String telefone, String email) {
+        this(nome, crm, telefone, email, BigDecimal.ZERO);
+    }
+
     @Column(name = "realiza_procedimentos_esteticos")
     private Boolean realizaProcedimentosEsteticos = false;
 

@@ -16,6 +16,15 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Cardiologista extends Medico {
 
+
+    public Cardiologista(String nome, String crm) {
+        this(nome, crm, null, null, BigDecimal.ZERO);
+    }
+
+    public Cardiologista(String nome, String crm, String telefone, String email) {
+        this(nome, crm, telefone, email, BigDecimal.ZERO);
+    }
+
     @Column(name = "realiza_ecocardiograma")
     private Boolean realizaEcocardiograma = false;
 

@@ -8,12 +8,40 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/triagens")
 @RequiredArgsConstructor
 public class TriagemController {
 
     private final TriagemService triagemService;
+
+    @GetMapping
+    public List<TriagemResponse> listarTodas() {
+        return triagemService.listarTodas();
+    }
+
+    @GetMapping("/{id}")
+    public TriagemResponse buscarPorId(@PathVariable UUID id) {
+        return triagemService.buscarPorId(id);
+    }
+
+    @GetMapping("/hoje")
+    public List<TriagemResponse> listarTriagensDoDia() {
+        return triagemService.listarTriagensDoDia();
+    }
+
+    @GetMapping("/emergencias/hoje")
+    public List<TriagemResponse> listarEmergenciasHoje() {
+        return triagemService.listarTriagensEmergenciaHoje();
+    }
+
+    @GetMapping("/fila/tamanho")
+    public int tamanhoFila() {
+        return triagemService.tamanhoFila();
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

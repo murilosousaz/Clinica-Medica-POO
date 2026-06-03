@@ -24,7 +24,7 @@ public interface MedicoRepository extends JpaRepository<Medico, UUID> {
 
     @Query("SELECT m FROM Medico m WHERE m.ativo = true ORDER BY " +
             "(SELECT AVG(a.estrelas) FROM Avaliacao a WHERE a.consulta.medico = m) DESC")
-    List<Medico> findMesBemAvaliados();
+    List<Medico> findMaisBemAvaliados();
 
     @Query("SELECT COUNT(c) FROM Consulta c WHERE c.medico = :medico AND c.dataConsulta = CURRENT_DATE")
     int contarConsultasHoje(@Param("medico") Medico medico);

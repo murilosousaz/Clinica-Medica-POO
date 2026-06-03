@@ -28,7 +28,7 @@ public class Triagem extends BaseEntity {
     private PrioridadeSUS prioridade;
 
     @Column(name = "queixa_principal", nullable = false, length = 1000)
-    private String queijaPrincipal;
+    private String queixaPrincipal;
 
     @Column(name = "pressao_arterial", length = 20)
     private String pressaoArterial;
@@ -49,11 +49,11 @@ public class Triagem extends BaseEntity {
     private String observacoes;
 
     public Triagem(Paciente paciente, Enfermeiro enfermeiro, PrioridadeSUS prioridade,
-                   String queijaPrincipal) {
+                   String queixaPrincipal) {
         this.paciente = paciente;
         this.enfermeiro = enfermeiro;
         this.prioridade = prioridade;
-        this.queijaPrincipal = queijaPrincipal;
+        this.queixaPrincipal = queixaPrincipal;
     }
 
     public double calcularIMC() {

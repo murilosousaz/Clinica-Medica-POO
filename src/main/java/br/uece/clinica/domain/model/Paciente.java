@@ -51,6 +51,10 @@ public class Paciente extends BaseEntity {
     @OneToMany(mappedBy = "paciente", fetch = FetchType.LAZY)
     private List<Conta> contas = new ArrayList<>();
 
+    public Paciente(String nome, Integer idade, String cpf, String telefone, String email) {
+        this(nome, idade, cpf, telefone, email, PlanoSaude.naoPossui());
+    }
+
     public Paciente(String nome, Integer idade, String cpf, String telefone,
                     String email, PlanoSaude planoSaude) {
         this.nome = nome;
@@ -65,8 +69,16 @@ public class Paciente extends BaseEntity {
         return planoSaude != null && planoSaude.temCobertura();
     }
 
-    private int contarConsultasRealizadas() {
-        return (int) historicoConsultas.stream()
+    public void atualizarPlanoSaude(PlanoSaude planoSaude) {
+        this.planoSaude = planoSaude != null ? planoSaude : PlanoSaude.naoPossui();
+    }
+
+    public List<Consulta> getHistoricoConsultas() {
+        return consultas;
+    }
+
+    public int contarConsultasRealizadas() {
+        return (int) consultas.stream()
                 .filter(c -> c.getStatus() == Consulta.StatusConsulta.REALIZADA)
                 .count();
     }

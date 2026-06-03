@@ -33,6 +33,22 @@ public abstract class BaseEntity {
     @Column(nullable = false)
     private boolean ativo = true;
 
+    @PrePersist
+    protected void onCreate() {
+        LocalDateTime agora = LocalDateTime.now();
+        if (dataCriacao == null) {
+            dataCriacao = agora;
+        }
+        if (dataAtualizacao == null) {
+            dataAtualizacao = agora;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        dataAtualizacao = LocalDateTime.now();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

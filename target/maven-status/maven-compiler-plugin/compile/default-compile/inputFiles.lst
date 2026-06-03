@@ -38,6 +38,7 @@
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/exception/AgendaLotadaException.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/exception/EnfermeiroNaoEmTurnoException.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/exception/LoginInvaidoException.java
+/home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/exception/LoginInvalidoException.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/exception/PacienteDuplicadoException.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/model/Avaliacao.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/model/BaseEntity.java

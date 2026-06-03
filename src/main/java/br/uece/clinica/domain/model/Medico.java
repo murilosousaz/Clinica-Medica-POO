@@ -72,5 +72,41 @@ public abstract class Medico extends BaseEntity {
         planosAtendidos.remove(plano);
     }
 
+
+    public BigDecimal getValorConsulta(boolean possuiPlano, String nomePlano) {
+        if (possuiPlano && nomePlano != null && aceitaPlano(nomePlano)) {
+            return BigDecimal.ZERO;
+        }
+        return valorConsultaParticular != null ? valorConsultaParticular : BigDecimal.ZERO;
+    }
+
+    public void adicionarPlanosAtendidos(String... planos) {
+        if (planos == null) {
+            return;
+        }
+        for (String plano : planos) {
+            adicionarPlano(plano);
+        }
+    }
+
+    public double getMediaAvaliacoes() {
+        return consultas.stream()
+                .filter(c -> c.getAvaliacao() != null && c.getAvaliacao().getEstrelas() != null)
+                .mapToInt(c -> c.getAvaliacao().getEstrelas())
+                .average()
+                .orElse(0.0);
+    }
+
+    public List<Avaliacao> getAvaliacoes() {
+        return consultas.stream()
+                .map(Consulta::getAvaliacao)
+                .filter(java.util.Objects::nonNull)
+                .toList();
+    }
+
+    public int getMaxPacientesPorDia() {
+        return 20;
+    }
+
     public abstract String getTipoEspecialidade();
 }

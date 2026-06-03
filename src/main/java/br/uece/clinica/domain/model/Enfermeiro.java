@@ -36,6 +36,9 @@ public class Enfermeiro extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Turno turno;
 
+    @Column(name = "anos_experiencia")
+    private Integer anosExperiencia = 0;
+
     @Column(name = "total_triagens_realizadas")
     private Integer totalTriagensRealizadas = 0;
 

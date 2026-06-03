@@ -16,6 +16,15 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Pediatra extends Medico {
 
+
+    public Pediatra(String nome, String crm) {
+        this(nome, crm, null, null, BigDecimal.ZERO);
+    }
+
+    public Pediatra(String nome, String crm, String telefone, String email) {
+        this(nome, crm, telefone, email, BigDecimal.ZERO);
+    }
+
     @Column(name = "idade_maxima_paciente")
     private Integer idadeMaximaPaciente = 18;
 

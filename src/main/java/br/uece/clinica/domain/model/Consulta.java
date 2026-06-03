@@ -9,6 +9,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,9 @@ public class Consulta extends BaseEntity {
 
     @Column(name = "horario", length = 10)
     private String horario;
+
+    @Column(name = "observacoes", columnDefinition = "TEXT")
+    private String observacoes;
 
     @Embedded
     @AttributeOverrides({
@@ -70,6 +75,27 @@ public class Consulta extends BaseEntity {
         this.dataConsulta = dataConsulta;
         this.horario = horario;
         this.status = StatusConsulta.AGENDADA;
+    }
+
+    public Consulta(Paciente paciente, Medico medico, LocalDateTime dataHora, String observacoes) {
+        this.medico = medico;
+        this.paciente = paciente;
+        atualizarDataHora(dataHora);
+        this.observacoes = observacoes;
+        this.status = StatusConsulta.AGENDADA;
+    }
+
+    public void atualizarDataHora(LocalDateTime dataHora) {
+        if (dataHora == null) {
+            throw new IllegalArgumentException("Data e hora da consulta são obrigatórias");
+        }
+        this.dataConsulta = dataHora.toLocalDate();
+        this.horario = dataHora.toLocalTime().toString();
+    }
+
+    public LocalDateTime getDataHora() {
+        LocalTime hora = horario != null ? LocalTime.parse(horario) : LocalTime.MIDNIGHT;
+        return LocalDateTime.of(dataConsulta, hora);
     }
 
     public void realizarConsulta(Diagnostico diagnostico, String receita, List<String> exames) {

@@ -18,8 +18,8 @@ CREATE INDEX idx_medico_ativo ON medico(ativo);
 -- Tabela de Planos de Saúde vinculados a Médicos
 CREATE TABLE IF NOT EXISTS medico_planos_saude (
                                                    medico_id UUID NOT NULL REFERENCES medico(id) ON DELETE CASCADE,
-                                                   plano_saude VARCHAR(100) NOT NULL,
-                                                   PRIMARY KEY (medico_id, plano_saude)
+                                                   plano VARCHAR(100) NOT NULL,
+                                                   PRIMARY KEY (medico_id, plano)
 );
 
 -- Tabela de Pacientes
@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS paciente (
                                         telefone VARCHAR(20),
                                         email VARCHAR(100),
                                         plano_saude_nome VARCHAR(100),
-                                        plano_numero_carnetizacao VARCHAR(50),
-                                        plano_ativo BOOLEAN DEFAULT false,
+                                        plano_saude_numero VARCHAR(50),
+                                        plano_saude_ativo BOOLEAN DEFAULT false,
                                         ativo BOOLEAN DEFAULT true,
                                         data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                         data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS enfermeiro (
                                           email VARCHAR(100),
                                           especialidade VARCHAR(100),
                                           turno VARCHAR(20) NOT NULL,
+                                          anos_experiencia INT DEFAULT 0,
                                           total_triagens_realizadas INT DEFAULT 0,
                                           ultimo_acesso TIMESTAMP,
                                           ativo BOOLEAN DEFAULT true,
@@ -100,6 +101,7 @@ CREATE TABLE IF NOT EXISTS consulta (
                                         diag_observacoes TEXT,
                                         receita TEXT,
                                         valor_pago NUMERIC(10,2) NOT NULL DEFAULT 0,
+                                        observacoes TEXT,
                                         status VARCHAR(20) NOT NULL DEFAULT 'AGENDADA',
                                         ativo BOOLEAN DEFAULT true,
                                         data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
