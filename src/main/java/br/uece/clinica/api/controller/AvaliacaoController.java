@@ -3,6 +3,7 @@ package br.uece.clinica.api.controller;
 import br.uece.clinica.application.dto.AvaliacaoRequest;
 import br.uece.clinica.application.dto.AvaliacaoResponse;
 import br.uece.clinica.application.service.AvaliacaoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "Avaliações", description = "Endpoints para registrar e consultar avaliações das consultas médicas.")
 @RequestMapping("/api/avaliacoes")
 @RequiredArgsConstructor
 public class AvaliacaoController {

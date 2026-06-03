@@ -3,6 +3,7 @@ package br.uece.clinica.api.controller;
 import br.uece.clinica.application.dto.TriagemRequest;
 import br.uece.clinica.application.dto.TriagemResponse;
 import br.uece.clinica.application.service.TriagemService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "Triagens", description = "Endpoints para registro, fila e consulta de triagens.")
 @RequestMapping("/api/triagens")
 @RequiredArgsConstructor
 public class TriagemController {

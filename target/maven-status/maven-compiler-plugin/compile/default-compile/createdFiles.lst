@@ -58,6 +58,7 @@ br/uece/clinica/application/dto/EnfermeiroResponse$EnfermeiroResponseBuilder.cla
 br/uece/clinica/domain/model/Dermatologista.class
 br/uece/clinica/application/dto/ListaEsperaResponse$ListaEsperaResponseBuilder.class
 br/uece/clinica/application/dto/TriagemResponse.class
+br/uece/clinica/infrastructure/config/OpenApiConfig.class
 br/uece/clinica/application/mapper/EnfermeiroMapper.class
 br/uece/clinica/ui/LoginView.class
 br/uece/clinica/application/dto/AvaliacaoRequest.class
@@ -67,6 +68,7 @@ br/uece/clinica/application/service/AvaliacaoService.class
 br/uece/clinica/application/dto/EnfermeiroResponse.class
 br/uece/clinica/domain/model/Triagem.class
 br/uece/clinica/application/dto/CreatePacienteRequest.class
+br/uece/clinica/domain/model/ClinicoGeral.class
 br/uece/clinica/domain/valueobject/PlanoSaude.class
 br/uece/clinica/application/dto/MedicoResponse$MedicoResponseBuilder.class
 br/uece/clinica/domain/model/ListaEspera.class

@@ -2,6 +2,7 @@ package br.uece.clinica.api.controller;
 
 import br.uece.clinica.application.service.ContaService;
 import br.uece.clinica.domain.model.Conta;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "Contas", description = "Endpoints para acompanhamento de contas, débitos e pagamentos.")
 @RequestMapping("/api/contas")
 @RequiredArgsConstructor
 public class ContaController {

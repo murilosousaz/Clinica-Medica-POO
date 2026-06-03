@@ -3,6 +3,7 @@ package br.uece.clinica.api.controller;
 import br.uece.clinica.application.dto.CreateEnfermeiroRequest;
 import br.uece.clinica.application.dto.EnfermeiroResponse;
 import br.uece.clinica.application.service.EnfermeiroService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "Enfermeiros", description = "Endpoints de cadastro e consulta de enfermeiros.")
 @RequestMapping("/api/enfermeiros")
 @RequiredArgsConstructor
 public class EnfermeiroController {

@@ -10,6 +10,7 @@ public final class MedicoMapper {
 
     public static Medico toEntity(CreateMedicoRequest dto) {
         return switch (normalizarEspecialidade(dto.getEspecialidade())) {
+            case "CLINICO_GERAL", "CLÍNICO_GERAL", "CLINICO GERAL", "CLÍNICO GERAL", "CLINICA_GERAL", "CLÍNICA_GERAL" -> new ClinicoGeral(dto.getNome(), dto.getCrm());
             case "CARDIOLOGISTA", "CARDIOLOGIA" -> new Cardiologista(dto.getNome(), dto.getCrm());
             case "DERMATOLOGISTA", "DERMATOLOGIA" -> new Dermatologista(dto.getNome(), dto.getCrm());
             case "PEDIATRA", "PEDIATRIA" -> new Pediatra(dto.getNome(), dto.getCrm());

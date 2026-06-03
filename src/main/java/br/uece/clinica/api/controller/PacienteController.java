@@ -5,6 +5,7 @@ import br.uece.clinica.application.dto.PacienteResponse;
 import br.uece.clinica.application.dto.ConsultaResponse;
 import br.uece.clinica.application.service.PacienteService;
 import br.uece.clinica.application.service.ConsultaService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "Pacientes", description = "Endpoints de cadastro, consulta e prontuário de pacientes.")
 @RequestMapping("/api/pacientes")
 @RequiredArgsConstructor
 public class PacienteController {

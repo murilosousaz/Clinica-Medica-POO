@@ -50,6 +50,7 @@
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/model/Avaliacao.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/model/BaseEntity.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/model/Cardiologista.java
+/home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/model/ClinicoGeral.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/model/Consulta.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/model/Conta.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/model/Dermatologista.java
@@ -71,6 +72,7 @@
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/valueobject/PlanoSaude.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/domain/valueobject/PrioridadeSUS.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/infrastructure/config/JpaConfig.java
+/home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/infrastructure/config/OpenApiConfig.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/infrastructure/config/SecurityConfig.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/infrastructure/config/WebConfig.java
 /home/murilo/IdeaProjects/Clinica-Medica-POO/src/main/java/br/uece/clinica/ui/ConsultaView.java

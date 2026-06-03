@@ -3,6 +3,7 @@ package br.uece.clinica.api.controller;
 import br.uece.clinica.application.dto.CreateMedicoRequest;
 import br.uece.clinica.application.dto.MedicoResponse;
 import br.uece.clinica.application.service.MedicoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "Médicos", description = "Endpoints de cadastro, pesquisa e ranking de médicos.")
 @RequestMapping("/api/medicos")
 @RequiredArgsConstructor
 public class MedicoController {
