@@ -1,7 +1,7 @@
 package br.uece.clinica.api.controller;
 
+import br.uece.clinica.application.dto.ContaResponse;
 import br.uece.clinica.application.service.ContaService;
-import br.uece.clinica.domain.model.Conta;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,17 +20,17 @@ public class ContaController {
     private final ContaService contaService;
 
     @GetMapping("/{id}")
-    public Conta buscarPorId(@PathVariable UUID id) {
+    public ContaResponse buscarPorId(@PathVariable UUID id) {
         return contaService.buscarPorId(id);
     }
 
     @GetMapping("/pendentes")
-    public List<Conta> listarPendentes() {
+    public List<ContaResponse> listarPendentes() {
         return contaService.listarPendentes();
     }
 
     @GetMapping("/vencidas")
-    public List<Conta> listarVencidas() {
+    public List<ContaResponse> listarVencidas() {
         return contaService.listarVencidas();
     }
 
@@ -41,7 +41,7 @@ public class ContaController {
     }
 
     @PutMapping("/{id}/pagar")
-    public Conta pagar(@PathVariable UUID id) {
+    public ContaResponse pagar(@PathVariable UUID id) {
         return contaService.pagar(id);
     }
 }

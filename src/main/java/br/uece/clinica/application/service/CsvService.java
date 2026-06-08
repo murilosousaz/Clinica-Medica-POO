@@ -163,10 +163,11 @@ public class CsvService {
     private Medico criarMedico(String nome, String crm, String especialidade, BigDecimal valor) {
         String normalizada = especialidade == null ? "" : especialidade.trim().toUpperCase();
         return switch (normalizada) {
+            case "CLINICO_GERAL", "CLÍNICO_GERAL", "CLINICO GERAL", "CLÍNICO GERAL" -> new ClinicoGeral(nome, crm, null, null, valor);
             case "CARDIOLOGISTA", "CARDIOLOGIA" -> new Cardiologista(nome, crm, null, null, valor);
             case "PEDIATRA", "PEDIATRIA" -> new Pediatra(nome, crm, null, null, valor);
             case "DERMATOLOGISTA", "DERMATOLOGIA" -> new Dermatologista(nome, crm, null, null, valor);
-            default -> new Cardiologista(nome, crm, null, null, valor);
+            default -> new ClinicoGeral(nome, crm, null, null, valor);
         };
     }
 

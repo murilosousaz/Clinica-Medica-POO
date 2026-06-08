@@ -33,7 +33,7 @@ public class EstatisticaService {
         dados.put("medicos", medicoRepository.count());
         dados.put("consultas", consultaRepository.count());
         dados.put("consultasRealizadas", consultas.stream().filter(c -> c.getStatus() == Consulta.StatusConsulta.REALIZADA).count());
-        dados.put("contasPendentes", contaRepository.contarContasPendentes());
+        dados.put("contasPendentes", contaRepository.countBySituacao(br.uece.clinica.domain.model.Conta.SituacaoConta.PENDENTE));
         dados.put("mediaGeralAvaliacoes", avaliacoes.stream().map(Avaliacao::getEstrelas).filter(e -> e != null).mapToInt(Integer::intValue).average().orElse(0.0));
 
         dados.put("medicoMaisBemAvaliado", medicos.stream()

@@ -12,11 +12,12 @@ public final class EnfermeiroMapper {
         Enfermeiro enfermeiro = new Enfermeiro(
                 dto.getNome(),
                 dto.getCoren(),
-                null,
-                null,
-                null,
+                dto.getTelefone(),
+                dto.getEmail(),
+                dto.getEspecialidade(),
                 parseTurno(dto.getTurno())
         );
+        enfermeiro.setCpf(normalizarCpf(dto.getCpf()));
         enfermeiro.setAnosExperiencia(dto.getAnosExperiencia());
         return enfermeiro;
     }
@@ -24,6 +25,10 @@ public final class EnfermeiroMapper {
     public static void updateEntity(Enfermeiro enfermeiro, CreateEnfermeiroRequest dto) {
         enfermeiro.setNome(dto.getNome());
         enfermeiro.setCoren(dto.getCoren());
+        enfermeiro.setCpf(normalizarCpf(dto.getCpf()));
+        enfermeiro.setTelefone(dto.getTelefone());
+        enfermeiro.setEmail(dto.getEmail());
+        enfermeiro.setEspecialidade(dto.getEspecialidade());
         enfermeiro.setTurno(parseTurno(dto.getTurno()));
         enfermeiro.setAnosExperiencia(dto.getAnosExperiencia());
     }
@@ -33,10 +38,19 @@ public final class EnfermeiroMapper {
                 .id(enfermeiro.getId())
                 .nome(enfermeiro.getNome())
                 .coren(enfermeiro.getCoren())
+                .cpf(enfermeiro.getCpf())
+                .telefone(enfermeiro.getTelefone())
+                .email(enfermeiro.getEmail())
+                .especialidade(enfermeiro.getEspecialidade())
                 .turno(enfermeiro.getTurno() != null ? enfermeiro.getTurno().name() : null)
                 .anosExperiencia(enfermeiro.getAnosExperiencia())
+                .totalTriagensRealizadas(enfermeiro.getTotalTriagensRealizadas())
                 .ativo(enfermeiro.isAtivo())
                 .build();
+    }
+
+    private static String normalizarCpf(String cpf) {
+        return cpf == null ? null : cpf.replaceAll("\\D", "");
     }
 
     private static Enfermeiro.Turno parseTurno(String turno) {

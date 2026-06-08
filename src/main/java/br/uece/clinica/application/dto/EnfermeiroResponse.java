@@ -17,9 +17,19 @@ public class EnfermeiroResponse {
 
     private String coren;
 
+    private String cpf;
+
+    private String telefone;
+
+    private String email;
+
+    private String especialidade;
+
     private String turno;
 
     private Integer anosExperiencia;
+
+    private Integer totalTriagensRealizadas;
 
     private boolean ativo;
 }

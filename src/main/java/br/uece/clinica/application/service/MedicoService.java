@@ -6,6 +6,7 @@ import br.uece.clinica.application.mapper.MedicoMapper;
 import br.uece.clinica.domain.model.Medico;
 import br.uece.clinica.domain.repository.MedicoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,17 +20,26 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MedicoService {
     private final MedicoRepository medicoRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public MedicoResponse salvar(CreateMedicoRequest request) {
+        request.setCpf(normalizarCpf(request.getCpf()));
         validarCrmUnico(request.getCrm(), null);
+        validarCpfUnico(request.getCpf(), null);
         Medico medico = MedicoMapper.toEntity(request);
+        medico.setSenhaHash(criptografarSenha(request.getSenha(), request.getCpf()));
         return MedicoMapper.toResponse(medicoRepository.save(medico));
     }
 
     public MedicoResponse atualizar(UUID id, CreateMedicoRequest request) {
+        request.setCpf(normalizarCpf(request.getCpf()));
         Medico medico = obterEntidadePorId(id);
         validarCrmUnico(request.getCrm(), id);
+        validarCpfUnico(request.getCpf(), id);
         MedicoMapper.updateEntity(medico, request);
+        if (request.getSenha() != null && !request.getSenha().isBlank()) {
+            medico.setSenhaHash(criptografarSenha(request.getSenha(), request.getCpf()));
+        }
         return MedicoMapper.toResponse(medicoRepository.save(medico));
     }
 
@@ -85,10 +95,41 @@ public class MedicoService {
         return stats;
     }
 
+    private String normalizarCpf(String cpf) {
+        if (cpf == null || cpf.isBlank()) {
+            throw new IllegalArgumentException("CPF do médico é obrigatório para autenticação");
+        }
+        return cpf.replaceAll("\\D", "");
+    }
+
+    private String criptografarSenha(String senha, String cpf) {
+        String senhaEfetiva = senha;
+        if (senhaEfetiva == null || senhaEfetiva.isBlank()) {
+            senhaEfetiva = cpf;
+        }
+        if (senhaEfetiva.length() < 6) {
+            throw new IllegalArgumentException("A senha deve ter pelo menos 6 caracteres");
+        }
+        return passwordEncoder.encode(senhaEfetiva);
+    }
+
     private void validarCrmUnico(String crm, UUID idAtual) {
         medicoRepository.findByCrm(crm).ifPresent(m -> {
             if (idAtual == null || !m.getId().equals(idAtual)) {
                 throw new RuntimeException("CRM já cadastrado: " + crm);
+            }
+        });
+    }
+
+
+
+    private void validarCpfUnico(String cpf, UUID idAtual) {
+        if (cpf == null || cpf.isBlank()) {
+            throw new IllegalArgumentException("CPF do médico é obrigatório para autenticação");
+        }
+        medicoRepository.findByCpf(cpf).ifPresent(m -> {
+            if (idAtual == null || !m.getId().equals(idAtual)) {
+                throw new RuntimeException("CPF já cadastrado para outro médico: " + cpf);
             }
         });
     }
@@ -98,9 +139,10 @@ public class MedicoService {
             return null;
         }
         return switch (especialidade.trim().toUpperCase()) {
-            case "CARDIOLOGISTA" -> "Cardiologia";
-            case "DERMATOLOGISTA" -> "Dermatologia";
-            case "PEDIATRA" -> "Pediatria";
+            case "CLINICO_GERAL", "CLÍNICO_GERAL", "CLINICO GERAL", "CLÍNICO GERAL" -> "Clínico Geral";
+            case "CARDIOLOGISTA", "CARDIOLOGIA" -> "Cardiologia";
+            case "DERMATOLOGISTA", "DERMATOLOGIA" -> "Dermatologia";
+            case "PEDIATRA", "PEDIATRIA" -> "Pediatria";
             default -> especialidade;
         };
     }

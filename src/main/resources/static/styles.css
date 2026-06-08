@@ -127,3 +127,26 @@ tr:last-child td { border-bottom: 0; }
 
 @media (max-width: 1180px) { .doctor-grid, .metric-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } .login-view { grid-template-columns: 1fr; } .login-hero { min-height: auto; } }
 @media (max-width: 860px) { .sidebar { transform: translateX(-105%); transition: transform .2s ease; } .sidebar.open { transform: translateX(0); } .content { margin-left: 0; width: 100%; padding: 18px; } .icon-button { display: inline-flex; } .topbar, .hero-card { flex-direction: column; align-items: flex-start; } .top-actions { width: 100%; flex-direction: column; align-items: stretch; } .two-columns, .doctor-grid, .metric-grid, .form-row { grid-template-columns: 1fr; } .login-view { padding: 18px; } .login-hero, .login-card { padding: 24px; border-radius: 24px; } }
+
+/* Controle visual por perfil de acesso */
+.role-hidden,
+.menu-item.hidden {
+  display: none !important;
+}
+
+.readonly-panel {
+  opacity: 0.64;
+  position: relative;
+}
+
+.readonly-panel::after {
+  content: "Ação indisponível para este perfil";
+  display: block;
+  margin-top: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.75rem;
+  background: rgba(148, 163, 184, 0.14);
+  color: var(--muted, #64748b);
+  font-size: 0.85rem;
+  font-weight: 600;
+}

@@ -2,6 +2,9 @@ package br.uece.clinica.application.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -17,7 +20,20 @@ public class MedicoResponse {
 
     private String crm;
 
+    private String cpf;
+
     private String especialidade;
+
+    @Builder.Default
+    private List<String> planosAtendidos = new ArrayList<>();
+
+    private BigDecimal valorConsultaParticular;
+
+    private Double mediaAvaliacoes;
+
+    private Integer totalAvaliacoes;
+
+    private Integer maxPacientesPorDia;
 
     private boolean ativo;
 }

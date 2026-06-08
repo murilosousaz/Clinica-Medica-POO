@@ -28,6 +28,7 @@ public final class ConsultaMapper {
                 .pacienteNome(consulta.getPaciente().getNome())
                 .medicoId(consulta.getMedico().getId())
                 .medicoNome(consulta.getMedico().getNome())
+                .medicoEspecialidade(consulta.getMedico().getEspecialidade())
                 .dataHora(consulta.getDataHora())
                 .status(consulta.getStatus().name())
                 .observacoes(consulta.getObservacoes())

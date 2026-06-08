@@ -28,4 +28,10 @@ public class CreatePacienteRequest {
     private String email;
 
     private PlanoSaude planoSaude;
+
+    /**
+     * Senha usada para autenticação do paciente por CPF.
+     * Em cadastros novos, informe pelo menos 6 caracteres.
+     */
+    private String senha;
 }

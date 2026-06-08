@@ -21,18 +21,17 @@ public interface ConsultaRepository extends JpaRepository<Consulta, UUID> {
     @Query("SELECT c FROM Consulta c WHERE c.medico = :medico AND c.dataConsulta = :data ORDER BY c.horario ASC")
     List<Consulta> findConsultasDoMedicoNoDia(@Param("medico") Medico medico, @Param("data") LocalDate data);
 
-    @Query("SELECT c FROM Consulta c WHERE c.status = 'REALIZADA' ORDER BY c.dataCriacao DESC")
-    List<Consulta> findConsultasRealizadas();
+    List<Consulta> findByStatusOrderByDataCriacaoDesc(Consulta.StatusConsulta status);
+
+    long countByStatus(Consulta.StatusConsulta status);
+
+    List<Consulta> findByDataConsultaAndStatusOrderByHorarioAsc(LocalDate dataConsulta, Consulta.StatusConsulta status);
+
+    List<Consulta> findByDataConsultaBetween(LocalDate dataInicio, LocalDate dataFim);
 
     @Query("SELECT COUNT(c) FROM Consulta c WHERE c.medico = :medico")
     int contarConsultasDoMedico(@Param("medico") Medico medico);
 
     @Query("SELECT COUNT(c) FROM Consulta c WHERE c.paciente = :paciente")
     int contarConsultasDoPaciente(@Param("paciente") Paciente paciente);
-
-    @Query("SELECT c FROM Consulta c WHERE c.dataConsulta = CURRENT_DATE AND c.status = 'AGENDADA'")
-    List<Consulta> findConsultasHojeAgendadas();
-
-    @Query("SELECT c FROM Consulta c WHERE c.dataConsulta BETWEEN :dataInicio AND :dataFim")
-    List<Consulta> findConsultasEmPeriodo(@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
 }

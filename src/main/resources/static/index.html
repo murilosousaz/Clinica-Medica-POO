@@ -21,19 +21,23 @@
     <form id="login-form" class="login-card">
       <span class="eyebrow">Acesso ao sistema</span>
       <h2>Entrar como usuário</h2>
-      <p>Selecione um paciente ou médico cadastrado para abrir a área correspondente.</p>
+      <p>Informe CPF e senha cadastrados. Pacientes, médicos e enfermeiros acessam o sistema pela mesma tela, com permissões diferentes.</p>
       <label>Perfil
-        <select id="login-role" name="role" required>
+        <select id="login-role" name="perfil" required>
           <option value="PACIENTE">Paciente</option>
           <option value="MEDICO">Médico</option>
+          <option value="ENFERMEIRO">Enfermeiro</option>
         </select>
       </label>
-      <label>Usuário
-        <select id="login-user" name="userId" required></select>
+      <label>CPF
+        <input id="login-cpf" name="cpf" inputmode="numeric" autocomplete="username" placeholder="Somente números" required />
       </label>
-      <button class="button" type="submit">Entrar</button>
+      <label>Senha
+        <input id="login-password" name="senha" type="password" autocomplete="current-password" minlength="6" required />
+      </label>
+      <button class="button" type="submit">Entrar com CPF e senha</button>
       <button id="presentation-login" class="button button-secondary" type="button">Entrar em modo apresentação</button>
-      <small id="login-help">Carregando usuários...</small>
+      <small id="login-help">Cadastre paciente/médico com senha antes de realizar login, ou use o modo apresentação.</small>
       <a href="/swagger-ui.html" target="_blank" rel="noopener">Abrir Swagger da API</a>
     </form>
   </section>
@@ -117,7 +121,8 @@
             <div class="form-row"><label>Idade<input name="idade" type="number" min="0" required /></label><label>CPF<input name="cpf" required /></label></div>
             <label>Telefone<input name="telefone" required /></label>
             <label>E-mail<input name="email" type="email" /></label>
-            <div class="form-row"><label>Plano de saúde<input name="planoNome" placeholder="Não tenho / Unimed / Hapvida" /></label><label>Nº do cartão<input name="planoNumero" /></label></div>
+            <label>Senha de acesso<input name="senha" type="password" minlength="6" required placeholder="Mínimo 6 caracteres" /></label>
+            <div class="form-row"><label>Plano de saúde<input name="planoNome" placeholder="SUS / Unimed / Hapvida / Não tenho" /></label><label>Nº do cartão<input name="planoNumero" /></label></div>
             <button class="button" type="submit">Salvar paciente</button>
           </form>
           <article class="panel"><div class="table-wrapper"><table><thead><tr><th>Paciente</th><th>CPF</th><th>Plano</th><th>Contato</th></tr></thead><tbody id="patients-table"></tbody></table></div></article>
@@ -131,15 +136,19 @@
             <h3>Cadastrar médico</h3>
             <label>Nome<input name="nome" required /></label>
             <label>CRM<input name="crm" required /></label>
+            <label>CPF para login<input name="cpf" inputmode="numeric" required /></label>
+            <label>Senha de acesso<input name="senha" type="password" minlength="6" required /></label>
             <label>Especialidade<select name="especialidade" required><option value="">Selecione</option><option value="CLINICO_GERAL">Clínico geral</option><option value="CARDIOLOGISTA">Cardiologista</option><option value="PEDIATRA">Pediatra</option><option value="DERMATOLOGISTA">Dermatologista</option></select></label>
-            <div class="rule-box"><strong>Regra de POO:</strong> médico atende até 3 pacientes/dia; pediatra atende até 2.</div>
+            <label>Valor da consulta particular/plano privado<input name="valorConsultaParticular" type="number" min="1" step="0.01" value="100.00" /></label>
+            <label>Planos atendidos pelo médico<input name="planosAtendidos" placeholder="SUS, Unimed, Hapvida" /></label>
+            <div class="rule-box"><strong>Regras:</strong> médico atende até 3 pacientes/dia; pediatra atende até 2. SUS é gratuito; demais planos e sem plano geram cobrança.</div>
             <button class="button" type="submit">Salvar médico</button>
           </form>
           <article class="panel search-panel">
             <h3>Pesquisar médicos</h3>
             <div class="form-row"><label>Nome<input id="doctor-name-filter" /></label><label>Especialidade<select id="doctor-specialty-filter"><option value="">Todas</option><option value="CLINICO_GERAL">Clínico geral</option><option value="CARDIOLOGISTA">Cardiologista</option><option value="PEDIATRA">Pediatra</option><option value="DERMATOLOGISTA">Dermatologista</option></select></label></div>
             <label>Plano do paciente<select id="doctor-plan-filter"></select></label>
-            <small class="hint">A busca mostra nome, especialidade, média de estrelas e últimas avaliações.</small>
+            <small class="hint">A busca mostra nome, especialidade, média de estrelas, últimas avaliações e valor cobrado fora do SUS.</small>
           </article>
         </div>
         <div id="doctor-search-list" class="doctor-grid lower-grid"></div>
@@ -152,6 +161,10 @@
             <h3>Cadastrar enfermeiro</h3>
             <label>Nome<input name="nome" required /></label>
             <label>COREN<input name="coren" required /></label>
+            <label>CPF para login<input name="cpf" inputmode="numeric" required /></label>
+            <label>Senha de acesso<input name="senha" type="password" minlength="6" required /></label>
+            <div class="form-row"><label>Telefone<input name="telefone" /></label><label>E-mail<input name="email" type="email" /></label></div>
+            <label>Serviço/Especialidade<input name="especialidade" placeholder="Triagem, emergência, classificação de risco" /></label>
             <div class="form-row"><label>Turno<select name="turno" required><option value="">Selecione</option><option>MATUTINO</option><option>VESPERTINO</option><option>NOTURNO</option></select></label><label>Anos de experiência<input name="anosExperiencia" type="number" min="0" value="0" /></label></div>
             <button class="button" type="submit">Salvar enfermeiro</button>
           </form>
@@ -224,8 +237,9 @@
       </section>
 
       <section id="contas" class="screen">
-        <div class="entity-header"><div><h2>Contas</h2><p>Valores gerados quando paciente não possui plano de saúde.</p></div><strong id="total-contas">0 pendentes</strong></div>
-        <article class="panel"><div id="accounts-list" class="card-list"></div></article>
+        <div class="entity-header"><div><h2>Contas</h2><p>Valores gerados para planos privados e pacientes sem SUS. SUS é gratuito.</p></div><strong id="total-contas">0 pendentes</strong></div>
+        <article class="panel requirement-panel"><h3>Regra de cobrança</h3><div class="checklist"><span>SUS: consulta gratuita</span><span>Unimed, Hapvida e demais planos: consulta paga</span><span>Sem plano: consulta paga</span><span>A conta é gerada ao concluir a consulta</span></div></article>
+        <article class="panel lower-grid"><div id="accounts-list" class="card-list"></div></article>
       </section>
 
       <section id="dados" class="screen">

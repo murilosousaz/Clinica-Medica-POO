@@ -11,7 +11,7 @@ import java.util.Map;
 @Tag(name = "CSV", description = "Endpoints para exportação e importação de dados em arquivos CSV.")
 @RequestMapping("/api/csv")
 @RequiredArgsConstructor
-public class CsvController {
+public class                                                                                   CsvController {
 
     private final CsvService csvService;
 

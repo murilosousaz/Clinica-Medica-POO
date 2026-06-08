@@ -14,6 +14,8 @@ import java.util.UUID;
 public interface MedicoRepository extends JpaRepository<Medico, UUID> {
     Optional<Medico> findByCrm(String crm);
 
+    Optional<Medico> findByCpf(String cpf);
+
     List<Medico> findByEspecialidade(String especialidade);
 
     @Query("SELECT m FROM Medico m WHERE m.especialidade = :especialidade AND m.ativo = true")

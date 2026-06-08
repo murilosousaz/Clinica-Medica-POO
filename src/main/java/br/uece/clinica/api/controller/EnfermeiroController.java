@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -28,6 +29,11 @@ public class EnfermeiroController {
     @GetMapping("/{id}")
     public EnfermeiroResponse buscarPorId(@PathVariable UUID id) {
         return enfermeiroService.buscarPorId(id);
+    }
+
+    @GetMapping("/{id}/estatisticas")
+    public Map<String, Object> estatisticasDoEnfermeiro(@PathVariable UUID id) {
+        return enfermeiroService.obterEstatisticasEnfermeiro(id);
     }
 
     @PostMapping

@@ -14,6 +14,8 @@ import java.util.UUID;
 public interface EnfermeiroRepository extends JpaRepository<Enfermeiro, UUID> {
     Optional<Enfermeiro> findByCoren(String coren);
 
+    Optional<Enfermeiro> findByCpf(String cpf);
+
     @Query("SELECT e FROM Enfermeiro e WHERE e.turno = :turno AND e.ativo = true")
     List<Enfermeiro> findByTurno(@Param("turno") Enfermeiro.Turno turno);
 

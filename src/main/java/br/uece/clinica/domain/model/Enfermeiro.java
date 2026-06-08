@@ -23,6 +23,12 @@ public class Enfermeiro extends BaseEntity {
     @Column(name = "coren", nullable = false, unique = true, length = 30)
     private String coren;
 
+    @Column(name = "cpf", unique = true, length = 14)
+    private String cpf;
+
+    @Column(name = "senha_hash", length = 100)
+    private String senhaHash;
+
     @Column(name = "telefone", length = 20)
     private String telefone;
 

@@ -1,5 +1,6 @@
 package br.uece.clinica.application.service;
 
+import br.uece.clinica.application.dto.ContaResponse;
 import br.uece.clinica.domain.model.Conta;
 import br.uece.clinica.domain.model.Paciente;
 import br.uece.clinica.domain.repository.ContaRepository;
@@ -25,38 +26,57 @@ public class ContaService {
     }
 
     @Transactional(readOnly = true)
-    public Conta buscarPorId(UUID id) {
-
-        return contaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+    public ContaResponse buscarPorId(UUID id) {
+        return toResponse(obterEntidadePorId(id));
     }
 
     @Transactional(readOnly = true)
-    public List<Conta> listarPendentes() {
-        return contaRepository.findContasPendentes();
+    public List<ContaResponse> listarPendentes() {
+        return contaRepository.findBySituacaoOrderByDataVencimentoAsc(Conta.SituacaoConta.PENDENTE)
+                .stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<Conta> listarVencidas() {
-        return contaRepository.findContasVencidas();
+    public List<ContaResponse> listarVencidas() {
+        return contaRepository.findBySituacao(Conta.SituacaoConta.VENCIDA)
+                .stream().map(this::toResponse).toList();
     }
 
-    public Conta pagar(UUID id) {
-
-        Conta conta = buscarPorId(id);
-
+    public ContaResponse pagar(UUID id) {
+        Conta conta = obterEntidadePorId(id);
         conta.pagar();
-
-        return contaRepository.save(conta);
+        return toResponse(contaRepository.save(conta));
     }
 
     @Transactional(readOnly = true)
     public BigDecimal calcularDebito(UUID pacienteId) {
+        Paciente paciente = pacienteRepository.findById(pacienteId)
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
-        Paciente paciente =
-                pacienteRepository.findById(pacienteId)
-                        .orElseThrow();
+        return contaRepository.findByPacienteAndSituacaoIn(
+                        paciente,
+                        List.of(Conta.SituacaoConta.PENDENTE, Conta.SituacaoConta.VENCIDA)
+                ).stream()
+                .map(Conta::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
-        return contaRepository.calcularDevidoPaciente(paciente);
+    private Conta obterEntidadePorId(UUID id) {
+        return contaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+    }
+
+    private ContaResponse toResponse(Conta conta) {
+        return ContaResponse.builder()
+                .id(conta.getId())
+                .pacienteId(conta.getPaciente() != null ? conta.getPaciente().getId() : null)
+                .pacienteNome(conta.getPaciente() != null ? conta.getPaciente().getNome() : null)
+                .consultaId(conta.getConsulta() != null ? conta.getConsulta().getId() : null)
+                .valor(conta.getValor())
+                .descricao(conta.getDescricao())
+                .dataVencimento(conta.getDataVencimento())
+                .dataPagamento(conta.getDataPagamento())
+                .situacao(conta.getSituacao() != null ? conta.getSituacao().name() : null)
+                .build();
     }
 }

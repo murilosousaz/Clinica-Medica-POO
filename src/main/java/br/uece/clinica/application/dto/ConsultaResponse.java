@@ -20,6 +20,7 @@ public class ConsultaResponse {
     private String pacienteNome;
     private UUID medicoId;
     private String medicoNome;
+    private String medicoEspecialidade;
     private LocalDateTime dataHora;
     private String status;
     private String observacoes;

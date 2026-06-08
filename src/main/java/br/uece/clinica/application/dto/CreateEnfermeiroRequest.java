@@ -17,6 +17,18 @@ public class CreateEnfermeiroRequest {
     private String coren;
 
     @NotBlank
+    private String cpf;
+
+    @NotBlank
+    private String senha;
+
+    private String telefone;
+
+    private String email;
+
+    private String especialidade;
+
+    @NotBlank
     private String turno;
 
     private Integer anosExperiencia;

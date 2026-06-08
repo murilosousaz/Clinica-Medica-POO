@@ -142,7 +142,7 @@ public class ConsultaService {
                     salva.getPaciente(),
                     salva,
                     salva.getValorPago(),
-                    "Consulta particular realizada em " + salva.getDataConsulta(),
+                    descricaoCobranca(salva),
                     LocalDate.now().plusDays(30)
             );
             contaRepository.save(conta);
@@ -151,14 +151,24 @@ public class ConsultaService {
         return toResponse(salva);
     }
 
+    private String descricaoCobranca(Consulta consulta) {
+        String plano = consulta.getPaciente().getPlanoSaude() != null
+                ? consulta.getPaciente().getPlanoSaude().getNome()
+                : "Não tenho";
+
+        return "Cobrança de consulta realizada em " + consulta.getDataConsulta()
+                + " — plano informado: " + plano
+                + ". Regra: somente SUS é gratuito; demais planos e pacientes sem plano geram cobrança.";
+    }
+
     @Transactional(readOnly = true)
     public List<ConsultaResponse> consultasHoje() {
-        return consultaRepository.findConsultasHojeAgendadas().stream().map(this::toResponse).collect(Collectors.toList());
+        return consultaRepository.findByDataConsultaAndStatusOrderByHorarioAsc(LocalDate.now(), Consulta.StatusConsulta.AGENDADA).stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<ConsultaResponse> consultasPeriodo(LocalDate inicio, LocalDate fim) {
-        return consultaRepository.findConsultasEmPeriodo(inicio, fim).stream().map(this::toResponse).collect(Collectors.toList());
+        return consultaRepository.findByDataConsultaBetween(inicio, fim).stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -220,6 +230,7 @@ public class ConsultaService {
                 .pacienteNome(consulta.getPaciente().getNome())
                 .medicoId(consulta.getMedico().getId())
                 .medicoNome(consulta.getMedico().getNome())
+                .medicoEspecialidade(consulta.getMedico().getEspecialidade())
                 .dataHora(consulta.getDataHora())
                 .status(consulta.getStatus().toString())
                 .observacoes(consulta.getObservacoes() != null ? consulta.getObservacoes() : observacoesDiagnostico)

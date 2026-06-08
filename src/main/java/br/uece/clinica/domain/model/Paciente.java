@@ -34,6 +34,9 @@ public class Paciente extends BaseEntity {
     @Email
     private String email;
 
+    @Column(name = "senha_hash")
+    private String senhaHash;
+
     @Embedded
     @AttributeOverrides({
         @AttributeOverride(name = "nome", column = @Column(name = "plano_saude_nome")),
@@ -67,6 +70,14 @@ public class Paciente extends BaseEntity {
 
     public boolean temPlanoSaude() {
         return planoSaude != null && planoSaude.temCobertura();
+    }
+
+    public boolean usaSus() {
+        return planoSaude != null && planoSaude.ehSus();
+    }
+
+    public boolean devePagarConsulta() {
+        return planoSaude == null || planoSaude.deveGerarCobranca();
     }
 
     public void atualizarPlanoSaude(PlanoSaude planoSaude) {

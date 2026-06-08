@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +41,8 @@ public class TriagemService {
         Enfermeiro enfermeiro = enfermeiroRepository.findById(request.getEnfermeiroId())
                 .orElseThrow(() -> new RuntimeException("Enfermeiro não encontrado"));
 
-        if (!enfermeiro.podeRealizarTriagem()) {
-            throw new RuntimeException("Enfermeiro não está em turno ou inativo");
+        if (!enfermeiro.isAtivo()) {
+            throw new RuntimeException("Enfermeiro inativo não pode registrar triagem");
         }
 
         Triagem triagem = TriagemMapper.toEntity(request, paciente, enfermeiro);
@@ -85,21 +86,27 @@ public class TriagemService {
 
     @Transactional(readOnly = true)
     public List<TriagemResponse> listarTriagensDoDia() {
-        return triagemRepository.findTriagensDoDia(LocalDate.now()).stream()
+        LocalDate hoje = LocalDate.now();
+        return triagemRepository.findByDataCriacaoBetweenOrderByPrioridadeAsc(
+                        hoje.atStartOfDay(), hoje.plusDays(1).atStartOfDay())
+                .stream()
                 .map(TriagemMapper::toResponse)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public List<TriagemResponse> listarTriagensEmergenciaHoje() {
-        return triagemRepository.findTriagensEmergenciaHoje().stream()
-                .map(TriagemMapper::toResponse)
+        return listarTriagensDoDia().stream()
+                .filter(t -> t.getPrioridade() == PrioridadeSUS.VERMELHO || t.getPrioridade() == PrioridadeSUS.LARANJA)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public Map<PrioridadeSUS, List<Triagem>> agruparTriagensHojePorPrioridade() {
-        return triagemRepository.findTriagensDoDia(LocalDate.now()).stream()
+        LocalDate hoje = LocalDate.now();
+        return triagemRepository.findByDataCriacaoBetweenOrderByPrioridadeAsc(
+                        hoje.atStartOfDay(), hoje.plusDays(1).atStartOfDay())
+                .stream()
                 .collect(Collectors.groupingBy(Triagem::getPrioridade));
     }
 
@@ -107,7 +114,9 @@ public class TriagemService {
     public int contarTriagensEnfermeiro(UUID enfermeiroId) {
         Enfermeiro enfermeiro = enfermeiroRepository.findById(enfermeiroId)
                 .orElseThrow(() -> new RuntimeException("Enfermeiro não encontrado"));
-        return triagemRepository.contarTriagensRealizadasHoje(enfermeiro);
+        LocalDate hoje = LocalDate.now();
+        return Math.toIntExact(triagemRepository.countByEnfermeiroAndDataCriacaoBetween(
+                enfermeiro, hoje.atStartOfDay(), hoje.plusDays(1).atStartOfDay()));
     }
 
     @Transactional(readOnly = true)

@@ -2,6 +2,8 @@ CREATE TABLE IF NOT EXISTS medico (
                                       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                       nome VARCHAR(120) NOT NULL,
                                       crm VARCHAR(20) UNIQUE NOT NULL,
+                                      cpf VARCHAR(14) UNIQUE,
+                                      senha_hash VARCHAR(255),
                                       especialidade VARCHAR(60) NOT NULL,
                                       planos_saude TEXT,
                                       valor_consulta_particular NUMERIC(10,2) NOT NULL,
@@ -17,6 +19,7 @@ CREATE TABLE IF NOT EXISTS medico (
 );
 
 CREATE INDEX idx_medico_especialidade ON medico(especialidade);
+CREATE INDEX idx_medico_cpf ON medico(cpf);
 CREATE INDEX idx_medico_ativo ON medico(ativo);
 
 -- Tabela de Planos de Saúde vinculados a Médicos
@@ -34,6 +37,7 @@ CREATE TABLE IF NOT EXISTS paciente (
                                         cpf VARCHAR(11) UNIQUE,
                                         telefone VARCHAR(20),
                                         email VARCHAR(100),
+                                        senha_hash VARCHAR(255),
                                         plano_saude_nome VARCHAR(100),
                                         plano_saude_numero VARCHAR(50),
                                         plano_saude_ativo BOOLEAN DEFAULT false,
@@ -51,6 +55,8 @@ CREATE TABLE IF NOT EXISTS enfermeiro (
                                           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                           nome VARCHAR(120) NOT NULL,
                                           coren VARCHAR(30) UNIQUE NOT NULL,
+                                          cpf VARCHAR(14) UNIQUE,
+                                          senha_hash VARCHAR(255),
                                           telefone VARCHAR(20),
                                           email VARCHAR(100),
                                           especialidade VARCHAR(100),
@@ -64,6 +70,7 @@ CREATE TABLE IF NOT EXISTS enfermeiro (
 );
 
 CREATE INDEX idx_enfermeiro_coren ON enfermeiro(coren);
+CREATE INDEX idx_enfermeiro_cpf ON enfermeiro(cpf);
 CREATE INDEX idx_enfermeiro_turno ON enfermeiro(turno);
 CREATE INDEX idx_enfermeiro_especialidade ON enfermeiro(especialidade);
 CREATE INDEX idx_enfermeiro_ativo ON enfermeiro(ativo);

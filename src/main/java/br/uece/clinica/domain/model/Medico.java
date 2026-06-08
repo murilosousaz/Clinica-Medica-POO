@@ -22,12 +22,20 @@ import java.util.List;
 @ToString(exclude = "consultas")
 public abstract class Medico extends BaseEntity {
 
+    private static final BigDecimal VALOR_PADRAO_CONSULTA = new BigDecimal("100.00");
+
     @NotBlank
     @Column(nullable = false)
     private String nome;
 
     @Column(unique = true, nullable = false, length = 20)
     private String crm;
+
+    @Column(unique = true, length = 14)
+    private String cpf;
+
+    @Column(name = "senha_hash")
+    private String senhaHash;
 
     @Column(nullable = false)
     private String especialidade;
@@ -73,11 +81,38 @@ public abstract class Medico extends BaseEntity {
     }
 
 
+    /**
+     * Regra de cobrança do sistema:
+     * - SUS: consulta gratuita;
+     * - qualquer plano privado: consulta paga;
+     * - sem plano: consulta paga.
+     *
+     * A lista de planos atendidos continua existindo para pesquisa/filtro de médicos,
+     * mas não zera automaticamente o valor da consulta.
+     */
     public BigDecimal getValorConsulta(boolean possuiPlano, String nomePlano) {
-        if (possuiPlano && nomePlano != null && aceitaPlano(nomePlano)) {
+        if (ehPlanoSus(nomePlano)) {
             return BigDecimal.ZERO;
         }
-        return valorConsultaParticular != null ? valorConsultaParticular : BigDecimal.ZERO;
+        return getValorConsultaParticularEfetivo();
+    }
+
+    public BigDecimal getValorConsultaParticularEfetivo() {
+        if (valorConsultaParticular == null || valorConsultaParticular.compareTo(BigDecimal.ZERO) <= 0) {
+            return VALOR_PADRAO_CONSULTA;
+        }
+        return valorConsultaParticular;
+    }
+
+    private boolean ehPlanoSus(String nomePlano) {
+        if (nomePlano == null) {
+            return false;
+        }
+        String normalizado = nomePlano.trim().toLowerCase();
+        return "sus".equals(normalizado)
+                || "sistema unico de saude".equals(normalizado)
+                || "sistema unico de saúde".equals(normalizado)
+                || "sistema único de saúde".equals(normalizado);
     }
 
     public void adicionarPlanosAtendidos(String... planos) {
