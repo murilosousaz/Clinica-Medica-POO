@@ -5,252 +5,255 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Clínica Médica | Sistema de Consultas</title>
   <meta name="description" content="Interface gráfica do sistema de clínica médica alinhada aos requisitos da disciplina de POO" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <section id="login-view" class="login-view">
-    <div class="login-hero">
-      <div class="login-brand"><span>CM</span><strong>Clínica Médica</strong></div>
-      <h1>Sistema de Consultas Médicas</h1>
-      <p>Interface gráfica para demonstrar login, entidades, agendamento, lista de espera, atendimento, prontuário, avaliações, estatísticas e persistência CSV.</p>
-      <div class="requirement-strip">
-        <span>POO</span><span>CSV</span><span>Exceções</span><span>Interface gráfica</span>
-      </div>
+<section id="login-view" class="login-view">
+  <div class="login-hero">
+    <div class="login-brand"><span>CM</span><strong>Clínica Médica</strong></div>
+    <h1>Sistema de Consultas Médicas</h1>
+    <p>Interface gráfica para demonstrar login, entidades, agendamento, lista de espera, atendimento, prontuário, avaliações, estatísticas e persistência CSV.</p>
+    <div class="requirement-strip">
+      <span>POO</span><span>CSV</span><span>Exceções</span><span>Interface gráfica</span>
     </div>
-
-    <form id="login-form" class="login-card">
-      <span class="eyebrow">Acesso ao sistema</span>
-      <h2>Entrar como usuário</h2>
-      <p>Informe CPF e senha cadastrados. Pacientes, médicos e enfermeiros acessam o sistema pela mesma tela, com permissões diferentes.</p>
-      <label>Perfil
-        <select id="login-role" name="perfil" required>
-          <option value="PACIENTE">Paciente</option>
-          <option value="MEDICO">Médico</option>
-          <option value="ENFERMEIRO">Enfermeiro</option>
-        </select>
-      </label>
-      <label>CPF
-        <input id="login-cpf" name="cpf" inputmode="numeric" autocomplete="username" placeholder="Somente números" required />
-      </label>
-      <label>Senha
-        <input id="login-password" name="senha" type="password" autocomplete="current-password" minlength="6" required />
-      </label>
-      <button class="button" type="submit">Entrar com CPF e senha</button>
-      <button id="presentation-login" class="button button-secondary" type="button">Entrar em modo apresentação</button>
-      <small id="login-help">Cadastre paciente/médico com senha antes de realizar login, ou use o modo apresentação.</small>
-      <a href="/swagger-ui.html" target="_blank" rel="noopener">Abrir Swagger da API</a>
-    </form>
-  </section>
-
-  <div id="app-view" class="app-shell hidden">
-    <aside class="sidebar" id="sidebar">
-      <div class="brand">
-        <div class="brand-mark">CM</div>
-        <div><strong>Clínica Médica</strong><span>Gestão acadêmica</span></div>
-      </div>
-      <div class="session-card">
-        <small>Sessão ativa</small>
-        <strong id="session-title">Modo apresentação</strong>
-        <span id="session-detail">Demonstração dos requisitos</span>
-      </div>
-      <nav class="menu" aria-label="Navegação por entidades">
-        <button class="menu-item active" data-section="dashboard">Dashboard</button>
-        <button class="menu-item" data-section="pacientes">Pacientes</button>
-        <button class="menu-item" data-section="medicos">Médicos</button>
-        <button class="menu-item" data-section="enfermeiros">Enfermeiros</button>
-        <button class="menu-item" data-section="consultas">Consultas</button>
-        <button class="menu-item" data-section="triagens">Triagens</button>
-        <button class="menu-item" data-section="prontuarios">Prontuários</button>
-        <button class="menu-item" data-section="avaliacoes">Avaliações</button>
-        <button class="menu-item" data-section="contas">Contas</button>
-        <button class="menu-item" data-section="dados">CSV & API</button>
-      </nav>
-      <div class="sidebar-footer">
-        <a href="/swagger-ui.html" target="_blank" rel="noopener">Swagger</a>
-        <button id="logout-button" class="ghost-button" type="button">Sair</button>
-      </div>
-    </aside>
-
-    <main class="content">
-      <header class="topbar">
-        <button id="sidebar-toggle" class="icon-button" type="button">☰</button>
-        <div class="title-block">
-          <span class="eyebrow">Sistema de Clínica Médica</span>
-          <h1 id="page-title">Dashboard</h1>
-          <p id="page-description">Visão geral dos dados e requisitos principais.</p>
-        </div>
-        <div class="top-actions">
-          <input id="screen-filter" type="search" placeholder="Filtrar na tela atual" />
-          <button id="refresh-button" class="button button-secondary" type="button">Atualizar</button>
-        </div>
-      </header>
-
-      <section id="alert" class="alert hidden"></section>
-
-      <section id="dashboard" class="screen active-screen">
-        <div class="hero-card">
-          <div>
-            <span class="eyebrow">Painel de apresentação</span>
-            <h2>Resumo operacional da clínica</h2>
-            <p>Use esta tela para iniciar a demonstração: ela mostra o volume de entidades, consultas, avaliações, fila de espera e estatísticas cobradas no trabalho.</p>
-          </div>
-          <div class="hero-actions">
-            <button class="button" data-go="consultas" type="button">Agendar consulta</button>
-            <button class="button button-secondary" data-go="prontuarios" type="button">Ver prontuário</button>
-          </div>
-        </div>
-        <div class="metric-grid">
-          <article class="metric"><span>Pacientes</span><strong id="metric-pacientes">0</strong><small>histórico e plano</small></article>
-          <article class="metric"><span>Médicos</span><strong id="metric-medicos">0</strong><small>especialidade e avaliação</small></article>
-          <article class="metric"><span>Consultas</span><strong id="metric-consultas">0</strong><small>agendadas/realizadas</small></article>
-          <article class="metric"><span>Triagens</span><strong id="metric-triagens">0</strong><small>risco e sinais vitais</small></article>
-          <article class="metric emphasis"><span>Fila</span><strong id="metric-fila">0</strong><small>lista de espera</small></article>
-        </div>
-        <div class="grid two-columns">
-          <article class="panel"><div class="panel-header"><div><h2>Status das consultas</h2><p>Distribuição atual da agenda.</p></div></div><div id="status-chart" class="bar-chart"></div></article>
-          <article class="panel"><div class="panel-header"><div><h2>Estatísticas do sistema</h2><p>Indicadores solicitados no enunciado.</p></div></div><div id="stats-list" class="stat-list"></div></article>
-        </div>
-      </section>
-
-      <section id="pacientes" class="screen">
-        <div class="entity-header"><div><h2>Pacientes</h2><p>Cadastro, plano de saúde e acesso ao prontuário.</p></div><strong id="total-pacientes">0 registros</strong></div>
-        <div class="grid two-columns">
-          <form id="patient-form" class="panel form-panel">
-            <h3>Cadastrar paciente</h3>
-            <label>Nome<input name="nome" required /></label>
-            <div class="form-row"><label>Idade<input name="idade" type="number" min="0" required /></label><label>CPF<input name="cpf" required /></label></div>
-            <label>Telefone<input name="telefone" required /></label>
-            <label>E-mail<input name="email" type="email" /></label>
-            <label>Senha de acesso<input name="senha" type="password" minlength="6" required placeholder="Mínimo 6 caracteres" /></label>
-            <div class="form-row"><label>Plano de saúde<input name="planoNome" placeholder="SUS / Unimed / Hapvida / Não tenho" /></label><label>Nº do cartão<input name="planoNumero" /></label></div>
-            <button class="button" type="submit">Salvar paciente</button>
-          </form>
-          <article class="panel"><div class="table-wrapper"><table><thead><tr><th>Paciente</th><th>CPF</th><th>Plano</th><th>Contato</th></tr></thead><tbody id="patients-table"></tbody></table></div></article>
-        </div>
-      </section>
-
-      <section id="medicos" class="screen">
-        <div class="entity-header"><div><h2>Médicos</h2><p>Especialidades, limite diário, média de estrelas e pesquisa por plano.</p></div><strong id="total-medicos">0 registros</strong></div>
-        <div class="grid two-columns">
-          <form id="doctor-form" class="panel form-panel">
-            <h3>Cadastrar médico</h3>
-            <label>Nome<input name="nome" required /></label>
-            <label>CRM<input name="crm" required /></label>
-            <label>CPF para login<input name="cpf" inputmode="numeric" required /></label>
-            <label>Senha de acesso<input name="senha" type="password" minlength="6" required /></label>
-            <label>Especialidade<select name="especialidade" required><option value="">Selecione</option><option value="CLINICO_GERAL">Clínico geral</option><option value="CARDIOLOGISTA">Cardiologista</option><option value="PEDIATRA">Pediatra</option><option value="DERMATOLOGISTA">Dermatologista</option></select></label>
-            <label>Valor da consulta particular/plano privado<input name="valorConsultaParticular" type="number" min="1" step="0.01" value="100.00" /></label>
-            <label>Planos atendidos pelo médico<input name="planosAtendidos" placeholder="SUS, Unimed, Hapvida" /></label>
-            <div class="rule-box"><strong>Regras:</strong> médico atende até 3 pacientes/dia; pediatra atende até 2. SUS é gratuito; demais planos e sem plano geram cobrança.</div>
-            <button class="button" type="submit">Salvar médico</button>
-          </form>
-          <article class="panel search-panel">
-            <h3>Pesquisar médicos</h3>
-            <div class="form-row"><label>Nome<input id="doctor-name-filter" /></label><label>Especialidade<select id="doctor-specialty-filter"><option value="">Todas</option><option value="CLINICO_GERAL">Clínico geral</option><option value="CARDIOLOGISTA">Cardiologista</option><option value="PEDIATRA">Pediatra</option><option value="DERMATOLOGISTA">Dermatologista</option></select></label></div>
-            <label>Plano do paciente<select id="doctor-plan-filter"></select></label>
-            <small class="hint">A busca mostra nome, especialidade, média de estrelas, últimas avaliações e valor cobrado fora do SUS.</small>
-          </article>
-        </div>
-        <div id="doctor-search-list" class="doctor-grid lower-grid"></div>
-      </section>
-
-      <section id="enfermeiros" class="screen">
-        <div class="entity-header"><div><h2>Enfermeiros</h2><p>Equipe responsável por registrar triagens.</p></div><strong id="total-enfermeiros">0 registros</strong></div>
-        <div class="grid two-columns">
-          <form id="nurse-form" class="panel form-panel">
-            <h3>Cadastrar enfermeiro</h3>
-            <label>Nome<input name="nome" required /></label>
-            <label>COREN<input name="coren" required /></label>
-            <label>CPF para login<input name="cpf" inputmode="numeric" required /></label>
-            <label>Senha de acesso<input name="senha" type="password" minlength="6" required /></label>
-            <div class="form-row"><label>Telefone<input name="telefone" /></label><label>E-mail<input name="email" type="email" /></label></div>
-            <label>Serviço/Especialidade<input name="especialidade" placeholder="Triagem, emergência, classificação de risco" /></label>
-            <div class="form-row"><label>Turno<select name="turno" required><option value="">Selecione</option><option>MATUTINO</option><option>VESPERTINO</option><option>NOTURNO</option></select></label><label>Anos de experiência<input name="anosExperiencia" type="number" min="0" value="0" /></label></div>
-            <button class="button" type="submit">Salvar enfermeiro</button>
-          </form>
-          <article class="panel"><div id="nurses-list" class="card-list"></div></article>
-        </div>
-      </section>
-
-      <section id="consultas" class="screen">
-        <div class="entity-header"><div><h2>Consultas</h2><p>Agendamento, cancelamento, realização e lista de espera.</p></div><strong id="total-consultas">0 registros</strong></div>
-        <div class="grid two-columns">
-          <form id="appointment-form" class="panel form-panel">
-            <h3>Agendar consulta</h3>
-            <label>Paciente<select id="appointment-patient" name="pacienteId" required></select></label>
-            <label>Médico<select id="appointment-doctor" name="medicoId" required></select></label>
-            <label>Data e hora<input name="dataHora" type="datetime-local" required /></label>
-            <label>Descrição inicial<textarea name="observacoes"></textarea></label>
-            <button class="button" type="submit">Agendar</button>
-          </form>
-          <form id="finish-form" class="panel form-panel clinical-form">
-            <h3>Realizar consulta</h3>
-            <label>Consulta agendada<select id="finish-appointment" name="consultaId" required></select></label>
-            <label>Sintomas<textarea name="sintomas" required></textarea></label>
-            <label>Diagnóstico<textarea name="diagnostico" required></textarea></label>
-            <label>Tratamento sugerido<textarea name="tratamentoSugerido"></textarea></label>
-            <label>Medicamentos<input name="medicamentos" /></label>
-            <label>Exames solicitados<input name="examesSolicitados" placeholder="separe por vírgula" /></label>
-            <label>Observações gerais<textarea name="observacoesGerais"></textarea></label>
-            <button class="button" type="submit">Concluir consulta</button>
-          </form>
-        </div>
-        <div class="grid two-columns lower-grid">
-          <article class="panel"><div class="panel-header"><div><h2>Agenda</h2><p>Cancelar pode promover o primeiro paciente da fila.</p></div></div><div class="table-wrapper"><table><thead><tr><th>Paciente</th><th>Médico</th><th>Data</th><th>Status</th><th>Ação</th></tr></thead><tbody id="appointments-table"></tbody></table></div></article>
-          <article class="panel"><div class="panel-header"><div><h2>Lista de espera</h2><p>Ordem de entrada preservada.</p></div></div><div id="wait-list" class="card-list"></div></article>
-        </div>
-      </section>
-
-      <section id="triagens" class="screen">
-        <div class="entity-header"><div><h2>Triagens</h2><p>Classificação de risco e sinais vitais do paciente.</p></div><strong id="total-triagens">0 registros</strong></div>
-        <div class="grid two-columns">
-          <form id="screening-form" class="panel form-panel">
-            <h3>Registrar triagem</h3>
-            <label>Paciente<select id="screening-patient" name="pacienteId" required></select></label>
-            <label>Enfermeiro<select id="screening-nurse" name="enfermeiroId" required></select></label>
-            <label>Prioridade<select name="prioridade" required><option value="VERMELHO">Vermelho</option><option value="LARANJA">Laranja</option><option value="AMARELO">Amarelo</option><option value="VERDE">Verde</option><option value="AZUL">Azul</option></select></label>
-            <label>Queixa principal<textarea name="queixaPrincipal" required></textarea></label>
-            <div class="form-row"><label>Temperatura<input name="temperatura" type="number" step="0.1" /></label><label>Pressão arterial<input name="pressaoArterial" /></label></div>
-            <div class="form-row"><label>FC<input name="frequenciaCardiaca" type="number" /></label><label>FR<input name="frequenciaRespiratoria" type="number" /></label></div>
-            <div class="form-row"><label>Peso<input name="peso" type="number" step="0.1" /></label><label>Altura<input name="altura" type="number" step="0.01" /></label></div>
-            <button class="button" type="submit">Salvar triagem</button>
-          </form>
-          <article class="panel"><div id="screenings-list" class="card-list"></div></article>
-        </div>
-      </section>
-
-      <section id="prontuarios" class="screen">
-        <div class="entity-header"><div><h2>Prontuários</h2><p>Histórico de consultas realizadas do paciente.</p></div></div>
-        <div class="grid two-columns">
-          <form id="record-form" class="panel form-panel"><h3>Buscar prontuário</h3><label>Paciente<select id="record-patient" name="pacienteId" required></select></label><button class="button" type="submit">Carregar histórico</button></form>
-          <article class="panel requirement-panel"><h3>Conteúdo obrigatório</h3><div class="checklist"><span>Data da consulta</span><span>Médico responsável</span><span>Sintomas e diagnóstico</span><span>Medicamentos e exames</span><span>Valor da consulta</span></div></article>
-        </div>
-        <article class="panel lower-grid"><div id="medical-record-list" class="timeline"></div></article>
-      </section>
-
-      <section id="avaliacoes" class="screen">
-        <div class="entity-header"><div><h2>Avaliações</h2><p>Texto e estrelas após consulta realizada.</p></div><strong id="total-avaliacoes">0 registros</strong></div>
-        <div class="grid two-columns">
-          <form id="review-form" class="panel form-panel"><h3>Avaliar consulta</h3><label>Consulta realizada<select id="review-appointment" name="consultaId" required></select></label><label>Estrelas<select name="estrelas" required><option value="5">5 — Excelente</option><option value="4">4 — Bom</option><option value="3">3 — Regular</option><option value="2">2 — Ruim</option><option value="1">1 — Péssimo</option></select></label><label>Avaliação textual<textarea name="texto"></textarea></label><button class="button" type="submit">Registrar avaliação</button></form>
-          <article class="panel"><div id="reviews-list" class="card-list"></div></article>
-        </div>
-      </section>
-
-      <section id="contas" class="screen">
-        <div class="entity-header"><div><h2>Contas</h2><p>Valores gerados para planos privados e pacientes sem SUS. SUS é gratuito.</p></div><strong id="total-contas">0 pendentes</strong></div>
-        <article class="panel requirement-panel"><h3>Regra de cobrança</h3><div class="checklist"><span>SUS: consulta gratuita</span><span>Unimed, Hapvida e demais planos: consulta paga</span><span>Sem plano: consulta paga</span><span>A conta é gerada ao concluir a consulta</span></div></article>
-        <article class="panel lower-grid"><div id="accounts-list" class="card-list"></div></article>
-      </section>
-
-      <section id="dados" class="screen">
-        <div class="entity-header"><div><h2>CSV & API</h2><p>Exportação/importação para cumprir persistência em arquivo e documentação dos endpoints.</p></div></div>
-        <div class="grid two-columns">
-          <article class="panel form-panel"><h3>Arquivos CSV</h3><p class="muted">Mantém PostgreSQL, mas exporta/importa dados em arquivos CSV.</p><div class="button-row"><button id="export-csv" class="button" type="button">Exportar CSV</button><button id="import-csv" class="button button-secondary" type="button">Importar CSV</button></div><pre id="csv-output" class="code-output">Resultado da operação CSV aparecerá aqui.</pre></article>
-          <article class="panel requirement-panel"><h3>Recursos de entrega</h3><div class="checklist"><span>Swagger: /swagger-ui.html</span><span>OpenAPI JSON: /api-docs</span><span>Diagrama e roteiro no arquivo Markdown do projeto</span><span>Frontend organizado por entidade</span></div><a class="button" href="/swagger-ui.html" target="_blank" rel="noopener">Abrir Swagger</a></article>
-        </div>
-      </section>
-    </main>
   </div>
-  <script src="/app.js"></script>
+
+  <form id="login-form" class="login-card">
+    <span class="eyebrow">Acesso ao sistema</span>
+    <h2>Entrar como usuário</h2>
+    <p>Informe CPF e senha cadastrados. Pacientes, médicos e enfermeiros acessam o sistema pela mesma tela, com permissões diferentes.</p>
+    <label>Perfil
+      <select id="login-role" name="perfil" required>
+        <option value="PACIENTE">Paciente</option>
+        <option value="MEDICO">Médico</option>
+        <option value="ENFERMEIRO">Enfermeiro</option>
+      </select>
+    </label>
+    <label>CPF
+      <input id="login-cpf" name="cpf" inputmode="numeric" autocomplete="username" placeholder="Somente números" required />
+    </label>
+    <label>Senha
+      <input id="login-password" name="senha" type="password" autocomplete="current-password" minlength="6" required />
+    </label>
+    <button class="button" type="submit">Entrar com CPF e senha</button>
+    <button id="presentation-login" class="button button-secondary" type="button">Entrar em modo apresentação</button>
+    <small id="login-help">Cadastre paciente/médico com senha antes de realizar login, ou use o modo apresentação.</small>
+    <a href="/swagger-ui.html" target="_blank" rel="noopener">Abrir Swagger da API</a>
+  </form>
+</section>
+
+<div id="app-view" class="app-shell hidden">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">CM</div>
+      <div><strong>Clínica Médica</strong><span>Gestão acadêmica</span></div>
+    </div>
+    <div class="session-card">
+      <small>Sessão ativa</small>
+      <strong id="session-title">Modo apresentação</strong>
+      <span id="session-detail">Demonstração dos requisitos</span>
+    </div>
+    <nav class="menu" aria-label="Navegação por entidades">
+      <button class="menu-item active" data-section="dashboard">Dashboard</button>
+      <button class="menu-item" data-section="pacientes">Pacientes</button>
+      <button class="menu-item" data-section="medicos">Médicos</button>
+      <button class="menu-item" data-section="enfermeiros">Enfermeiros</button>
+      <button class="menu-item" data-section="consultas">Consultas</button>
+      <button class="menu-item" data-section="triagens">Triagens</button>
+      <button class="menu-item" data-section="prontuarios">Prontuários</button>
+      <button class="menu-item" data-section="avaliacoes">Avaliações</button>
+      <button class="menu-item" data-section="contas">Contas</button>
+      <button class="menu-item" data-section="dados">CSV & API</button>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/swagger-ui.html" target="_blank" rel="noopener">Swagger</a>
+      <button id="logout-button" class="ghost-button" type="button">Sair</button>
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <button id="sidebar-toggle" class="icon-button" type="button">☰</button>
+      <div class="title-block">
+        <span class="eyebrow">Sistema de Clínica Médica</span>
+        <h1 id="page-title">Dashboard</h1>
+        <p id="page-description">Visão geral dos dados e requisitos principais.</p>
+      </div>
+      <div class="top-actions">
+        <input id="screen-filter" type="search" placeholder="Filtrar na tela atual" />
+        <button id="refresh-button" class="button button-secondary" type="button">Atualizar</button>
+      </div>
+    </header>
+
+    <section id="alert" class="alert hidden"></section>
+
+    <section id="dashboard" class="screen active-screen">
+      <div class="hero-card">
+        <div>
+          <span class="eyebrow">Painel de apresentação</span>
+          <h2>Resumo operacional da clínica</h2>
+          <p>Use esta tela para iniciar a demonstração: ela mostra o volume de entidades, consultas, avaliações, fila de espera e estatísticas cobradas no trabalho.</p>
+        </div>
+        <div class="hero-actions">
+          <button class="button" data-go="consultas" type="button">Agendar consulta</button>
+          <button class="button button-secondary" data-go="prontuarios" type="button">Ver prontuário</button>
+        </div>
+      </div>
+      <div class="metric-grid">
+        <article class="metric"><span>Pacientes</span><strong id="metric-pacientes">0</strong><small>histórico e plano</small></article>
+        <article class="metric"><span>Médicos</span><strong id="metric-medicos">0</strong><small>especialidade e avaliação</small></article>
+        <article class="metric"><span>Consultas</span><strong id="metric-consultas">0</strong><small>agendadas/realizadas</small></article>
+        <article class="metric"><span>Triagens</span><strong id="metric-triagens">0</strong><small>risco e sinais vitais</small></article>
+        <article class="metric emphasis"><span>Fila</span><strong id="metric-fila">0</strong><small>lista de espera</small></article>
+      </div>
+      <div class="grid two-columns">
+        <article class="panel"><div class="panel-header"><div><h2>Status das consultas</h2><p>Distribuição atual da agenda.</p></div></div><div id="status-chart" class="bar-chart"></div></article>
+        <article class="panel"><div class="panel-header"><div><h2>Estatísticas do sistema</h2><p>Indicadores solicitados no enunciado.</p></div></div><div id="stats-list" class="stat-list"></div></article>
+      </div>
+    </section>
+
+    <section id="pacientes" class="screen">
+      <div class="entity-header"><div><h2>Pacientes</h2><p>Cadastro, plano de saúde e acesso ao prontuário.</p></div><strong id="total-pacientes">0 registros</strong></div>
+      <div class="grid two-columns">
+        <form id="patient-form" class="panel form-panel">
+          <h3>Cadastrar paciente</h3>
+          <label>Nome<input name="nome" required /></label>
+          <div class="form-row"><label>Idade<input name="idade" type="number" min="0" required /></label><label>CPF<input name="cpf" required /></label></div>
+          <label>Telefone<input name="telefone" required /></label>
+          <label>E-mail<input name="email" type="email" /></label>
+          <label>Senha de acesso<input name="senha" type="password" minlength="6" required placeholder="Mínimo 6 caracteres" /></label>
+          <div class="form-row"><label>Plano de saúde<input name="planoNome" placeholder="SUS / Unimed / Hapvida / Não tenho" /></label><label>Nº do cartão<input name="planoNumero" /></label></div>
+          <button class="button" type="submit">Salvar paciente</button>
+        </form>
+        <article class="panel"><div class="table-wrapper"><table><thead><tr><th>Paciente</th><th>CPF</th><th>Plano</th><th>Contato</th></tr></thead><tbody id="patients-table"></tbody></table></div></article>
+      </div>
+    </section>
+
+    <section id="medicos" class="screen">
+      <div class="entity-header"><div><h2>Médicos</h2><p>Especialidades, limite diário, média de estrelas e pesquisa por plano.</p></div><strong id="total-medicos">0 registros</strong></div>
+      <div class="grid two-columns">
+        <form id="doctor-form" class="panel form-panel">
+          <h3>Cadastrar médico</h3>
+          <label>Nome<input name="nome" required /></label>
+          <label>CRM<input name="crm" required /></label>
+          <label>CPF para login<input name="cpf" inputmode="numeric" required /></label>
+          <label>Senha de acesso<input name="senha" type="password" minlength="6" required /></label>
+          <label>Especialidade<select name="especialidade" required><option value="">Selecione</option><option value="CLINICO_GERAL">Clínico geral</option><option value="CARDIOLOGISTA">Cardiologista</option><option value="PEDIATRA">Pediatra</option><option value="DERMATOLOGISTA">Dermatologista</option></select></label>
+          <label>Valor da consulta particular/plano privado<input name="valorConsultaParticular" type="number" min="1" step="0.01" value="100.00" /></label>
+          <label>Planos atendidos pelo médico<input name="planosAtendidos" placeholder="SUS, Unimed, Hapvida" /></label>
+          <div class="rule-box"><strong>Regras:</strong> médico atende até 3 pacientes/dia; pediatra atende até 2. SUS é gratuito; demais planos e sem plano geram cobrança.</div>
+          <button class="button" type="submit">Salvar médico</button>
+        </form>
+        <article class="panel search-panel">
+          <h3>Pesquisar médicos</h3>
+          <div class="form-row"><label>Nome<input id="doctor-name-filter" /></label><label>Especialidade<select id="doctor-specialty-filter"><option value="">Todas</option><option value="CLINICO_GERAL">Clínico geral</option><option value="CARDIOLOGISTA">Cardiologista</option><option value="PEDIATRA">Pediatra</option><option value="DERMATOLOGISTA">Dermatologista</option></select></label></div>
+          <label>Plano do paciente<select id="doctor-plan-filter"></select></label>
+          <small class="hint">A busca mostra nome, especialidade, média de estrelas, últimas avaliações e valor cobrado fora do SUS.</small>
+        </article>
+      </div>
+      <div id="doctor-search-list" class="doctor-grid lower-grid"></div>
+    </section>
+
+    <section id="enfermeiros" class="screen">
+      <div class="entity-header"><div><h2>Enfermeiros</h2><p>Equipe responsável por registrar triagens.</p></div><strong id="total-enfermeiros">0 registros</strong></div>
+      <div class="grid two-columns">
+        <form id="nurse-form" class="panel form-panel">
+          <h3>Cadastrar enfermeiro</h3>
+          <label>Nome<input name="nome" required /></label>
+          <label>COREN<input name="coren" required /></label>
+          <label>CPF para login<input name="cpf" inputmode="numeric" required /></label>
+          <label>Senha de acesso<input name="senha" type="password" minlength="6" required /></label>
+          <div class="form-row"><label>Telefone<input name="telefone" /></label><label>E-mail<input name="email" type="email" /></label></div>
+          <label>Serviço/Especialidade<input name="especialidade" placeholder="Triagem, emergência, classificação de risco" /></label>
+          <div class="form-row"><label>Turno<select name="turno" required><option value="">Selecione</option><option>MATUTINO</option><option>VESPERTINO</option><option>NOTURNO</option></select></label><label>Anos de experiência<input name="anosExperiencia" type="number" min="0" value="0" /></label></div>
+          <button class="button" type="submit">Salvar enfermeiro</button>
+        </form>
+        <article class="panel"><div id="nurses-list" class="card-list"></div></article>
+      </div>
+    </section>
+
+    <section id="consultas" class="screen">
+      <div class="entity-header"><div><h2>Consultas</h2><p>Agendamento, cancelamento, realização e lista de espera.</p></div><strong id="total-consultas">0 registros</strong></div>
+      <div class="grid two-columns">
+        <form id="appointment-form" class="panel form-panel">
+          <h3>Agendar consulta</h3>
+          <label>Paciente<select id="appointment-patient" name="pacienteId" required></select></label>
+          <label>Médico<select id="appointment-doctor" name="medicoId" required></select></label>
+          <label>Data e hora<input name="dataHora" type="datetime-local" required /></label>
+          <label>Descrição inicial<textarea name="observacoes"></textarea></label>
+          <button class="button" type="submit">Agendar</button>
+        </form>
+        <form id="finish-form" class="panel form-panel clinical-form">
+          <h3>Realizar consulta</h3>
+          <label>Consulta agendada<select id="finish-appointment" name="consultaId" required></select></label>
+          <label>Sintomas<textarea name="sintomas" required></textarea></label>
+          <label>Diagnóstico<textarea name="diagnostico" required></textarea></label>
+          <label>Tratamento sugerido<textarea name="tratamentoSugerido"></textarea></label>
+          <label>Medicamentos<input name="medicamentos" /></label>
+          <label>Exames solicitados<input name="examesSolicitados" placeholder="separe por vírgula" /></label>
+          <label>Observações gerais<textarea name="observacoesGerais"></textarea></label>
+          <button class="button" type="submit">Concluir consulta</button>
+        </form>
+      </div>
+      <div class="grid two-columns lower-grid">
+        <article class="panel"><div class="panel-header"><div><h2>Agenda</h2><p>Cancelar pode promover o primeiro paciente da fila.</p></div></div><div class="table-wrapper"><table><thead><tr><th>Paciente</th><th>Médico</th><th>Data</th><th>Status</th><th>Ação</th></tr></thead><tbody id="appointments-table"></tbody></table></div></article>
+        <article class="panel"><div class="panel-header"><div><h2>Lista de espera</h2><p>Ordem de entrada preservada.</p></div></div><div id="wait-list" class="card-list"></div></article>
+      </div>
+    </section>
+
+    <section id="triagens" class="screen">
+      <div class="entity-header"><div><h2>Triagens</h2><p>Classificação de risco e sinais vitais do paciente.</p></div><strong id="total-triagens">0 registros</strong></div>
+      <div class="grid two-columns">
+        <form id="screening-form" class="panel form-panel">
+          <h3>Registrar triagem</h3>
+          <label>Paciente<select id="screening-patient" name="pacienteId" required></select></label>
+          <label>Enfermeiro<select id="screening-nurse" name="enfermeiroId" required></select></label>
+          <label>Prioridade<select name="prioridade" required><option value="VERMELHO">Vermelho</option><option value="LARANJA">Laranja</option><option value="AMARELO">Amarelo</option><option value="VERDE">Verde</option><option value="AZUL">Azul</option></select></label>
+          <label>Queixa principal<textarea name="queixaPrincipal" required></textarea></label>
+          <div class="form-row"><label>Temperatura<input name="temperatura" type="number" step="0.1" /></label><label>Pressão arterial<input name="pressaoArterial" /></label></div>
+          <div class="form-row"><label>FC<input name="frequenciaCardiaca" type="number" /></label><label>FR<input name="frequenciaRespiratoria" type="number" /></label></div>
+          <div class="form-row"><label>Peso<input name="peso" type="number" step="0.1" /></label><label>Altura<input name="altura" type="number" step="0.01" /></label></div>
+          <button class="button" type="submit">Salvar triagem</button>
+        </form>
+        <article class="panel"><div id="screenings-list" class="card-list"></div></article>
+      </div>
+    </section>
+
+    <section id="prontuarios" class="screen">
+      <div class="entity-header"><div><h2>Prontuários</h2><p>Histórico de consultas realizadas do paciente.</p></div></div>
+      <div class="grid two-columns">
+        <form id="record-form" class="panel form-panel"><h3>Buscar prontuário</h3><label>Paciente<select id="record-patient" name="pacienteId" required></select></label><button class="button" type="submit">Carregar histórico</button></form>
+        <article class="panel requirement-panel"><h3>Conteúdo obrigatório</h3><div class="checklist"><span>Data da consulta</span><span>Médico responsável</span><span>Sintomas e diagnóstico</span><span>Medicamentos e exames</span><span>Valor da consulta</span></div></article>
+      </div>
+      <article class="panel lower-grid"><div id="medical-record-list" class="timeline"></div></article>
+    </section>
+
+    <section id="avaliacoes" class="screen">
+      <div class="entity-header"><div><h2>Avaliações</h2><p>Texto e estrelas após consulta realizada.</p></div><strong id="total-avaliacoes">0 registros</strong></div>
+      <div class="grid two-columns">
+        <form id="review-form" class="panel form-panel"><h3>Avaliar consulta</h3><label>Consulta realizada<select id="review-appointment" name="consultaId" required></select></label><label>Estrelas<select name="estrelas" required><option value="5">5 — Excelente</option><option value="4">4 — Bom</option><option value="3">3 — Regular</option><option value="2">2 — Ruim</option><option value="1">1 — Péssimo</option></select></label><label>Avaliação textual<textarea name="texto"></textarea></label><button class="button" type="submit">Registrar avaliação</button></form>
+        <article class="panel"><div id="reviews-list" class="card-list"></div></article>
+      </div>
+    </section>
+
+    <section id="contas" class="screen">
+      <div class="entity-header"><div><h2>Contas</h2><p>Valores gerados para planos privados e pacientes sem SUS. SUS é gratuito.</p></div><strong id="total-contas">0 pendentes</strong></div>
+      <article class="panel requirement-panel"><h3>Regra de cobrança</h3><div class="checklist"><span>SUS: consulta gratuita</span><span>Unimed, Hapvida e demais planos: consulta paga</span><span>Sem plano: consulta paga</span><span>A conta é gerada ao concluir a consulta</span></div></article>
+      <article class="panel lower-grid"><div id="accounts-list" class="card-list"></div></article>
+    </section>
+
+    <section id="dados" class="screen">
+      <div class="entity-header"><div><h2>CSV & API</h2><p>Exportação/importação para cumprir persistência em arquivo e documentação dos endpoints.</p></div></div>
+      <div class="grid two-columns">
+        <article class="panel form-panel"><h3>Arquivos CSV</h3><p class="muted">Mantém PostgreSQL, mas exporta/importa dados em arquivos CSV.</p><div class="button-row"><button id="export-csv" class="button" type="button">Exportar CSV</button><button id="import-csv" class="button button-secondary" type="button">Importar CSV</button></div><pre id="csv-output" class="code-output">Resultado da operação CSV aparecerá aqui.</pre></article>
+        <article class="panel requirement-panel"><h3>Recursos de entrega</h3><div class="checklist"><span>Swagger: /swagger-ui.html</span><span>OpenAPI JSON: /api-docs</span><span>Diagrama e roteiro no arquivo Markdown do projeto</span><span>Frontend organizado por entidade</span></div><a class="button" href="/swagger-ui.html" target="_blank" rel="noopener">Abrir Swagger</a></article>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="/app.js"></script>
 </body>
 </html>

@@ -214,8 +214,8 @@ function renderMedicos() {
   const selectedPatient = state.pacientes.find(p => String(p.id) === String($('#doctor-plan-filter')?.value || ''));
   const patientPlan = planoLabel(selectedPatient);
   const doctors = state.medicos.filter(m => (!term || normalize(m.nome).includes(term))
-    && (!specialty || especialidadeKey(m.especialidade) === specialty)
-    && (!selectedPatient || !temPlano(patientPlan) || (m.planosAtendidos || []).some(plano => normalize(plano) === normalize(patientPlan))));
+      && (!specialty || especialidadeKey(m.especialidade) === specialty)
+      && (!selectedPatient || !temPlano(patientPlan) || (m.planosAtendidos || []).some(plano => normalize(plano) === normalize(patientPlan))));
   $('#doctor-search-list').innerHTML = doctors.length ? doctors.map(m => {
     const avg = Number(m.mediaAvaliacoes || medicoMedia(m.id) || 0); const reviews = ultimasAvaliacoes(m.id, 2);
     return `<article class="doctor-card searchable"><header><div><strong>${escapeHtml(m.nome)}</strong><small>CRM: ${escapeHtml(m.crm || '-')}</small></div>${badge(formatEspecialidade(m.especialidade), 'info')}</header><div class="rating">${stars(avg)} ${avg ? Number(avg).toFixed(1) : 'sem média'}</div><small>Limite diário: ${m.maxPacientesPorDia || limiteMedico(m)} paciente(s) • Valor fora do SUS: ${money(m.valorConsultaParticular || 100)}</small><div class="mini-list">${reviews.length ? reviews.map(r => `<span>“${escapeHtml(r.texto || 'Sem comentário')}” • ${r.estrelas}★</span>`).join('') : '<span>Sem avaliações recentes</span>'}</div></article>`;
@@ -297,18 +297,21 @@ function setupForms() {
     state.session = { role: login.perfil, userId: login.usuarioId, nome: login.nome, cpf: login.cpf, token: login.token };
     form.reset();
     updateVisibility();
+    renderAll();
     goTo(defaultSectionForRole(login.perfil));
     showAlert(login.mensagem || 'Login realizado com sucesso.');
   }, false);
   $('#presentation-login')?.addEventListener('click', () => {
     state.session = { role: 'APRESENTACAO', userId: null, nome: 'Modo apresentação', token: null };
     updateVisibility();
+    renderAll();
     goTo('dashboard');
   });
   $('#logout-button')?.addEventListener('click', () => {
     state.session = null;
     localStorage.removeItem('clinica.session');
     updateVisibility();
+    renderAll();
     goTo('dashboard');
   });
 
