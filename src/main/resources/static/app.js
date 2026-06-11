@@ -27,7 +27,7 @@ const pages = {
   prontuarios: ['Prontuários', 'Histórico clínico do paciente.'],
   avaliacoes: ['Avaliações', 'Texto e estrelas por consulta realizada.'],
   contas: ['Contas', 'Cobranças geradas para planos privados e pacientes sem SUS.'],
-  dados: ['CSV & API', 'Exportação/importação e documentação Swagger.']
+  dados: ['Dados', 'Exportação e importação de dados em CSV.']
 };
 
 const $ = (selector) => document.querySelector(selector);
