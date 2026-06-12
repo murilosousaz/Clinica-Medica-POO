@@ -36,6 +36,7 @@ button, input, select, textarea { font: inherit; }
 button { cursor: pointer; }
 a { color: inherit; }
 .hidden { display: none !important; }
+::selection { background: var(--primary-soft); }
 
 /* ── Background animated blobs ── */
 .bg-blobs {
