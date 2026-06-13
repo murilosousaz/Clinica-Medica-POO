@@ -171,7 +171,7 @@ a { color: inherit; }
 .sidebar-footer a:hover, .ghost-button:hover { background: rgba(255,255,255,0.15); }
 
 /* ── Content ── */
-.content { margin-left:292px; width:calc(100% - 292px); padding:26px; }
+.content { margin-left:292px; width:calc(100% - 292px); padding:26px; overflow-x:auto; }
 
 /* Glass topbar */
 .topbar {
@@ -223,6 +223,7 @@ label { display:grid; gap:7px; color:#334155; font-weight:780; font-size:.9rem; 
   box-shadow: 0 10px 30px rgba(29,85,208,.30);
   text-decoration:none; text-align:center;
   transition:all .25s ease; position:relative; overflow:hidden;
+  white-space:nowrap; flex-shrink:0;
 }
 .button::after {
   content:''; position:absolute; inset:0;
