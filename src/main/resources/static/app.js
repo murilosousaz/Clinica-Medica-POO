@@ -228,26 +228,30 @@ function renderEnfermeiros() {
 }
 
 function renderConsultas() {
-  setText('#total-consultas', `${state.consultas.length} registro(s)`);
-  $('#appointments-table').innerHTML = state.consultas.length ? state.consultas.map(c => `<tr class="searchable"><td>${escapeHtml(c.pacienteNome || '-')}</td><td>${escapeHtml(c.medicoNome || '-')}<span class="subtext">${formatEspecialidade(c.medicoEspecialidade)}</span></td><td>${formatDate(c.dataHora)}</td><td>${badge(labelStatus(c.status), statusType(c.status))}</td><td>${c.status === 'AGENDADA' ? `<button class="button-danger" type="button" onclick="cancelarConsulta('${escapeHtml(c.id)}')">Cancelar</button>` : '-'}</td></tr>`).join('') : tableEmpty(5, 'Nenhuma consulta cadastrada.');
-  $('#wait-list').innerHTML = renderFila(state.fila);
-  fillSelect('#finish-appointment', state.consultas.filter(c => c.status === 'AGENDADA'), 'Selecione uma consulta', c => `${c.pacienteNome || 'Paciente'} com ${c.medicoNome || 'Médico'} — ${formatDate(c.dataHora)}`);
+  const consultas = roleScoped(state.consultas);
+  setText('#total-consultas', `${consultas.length} registro(s)`);
+  $('#appointments-table').innerHTML = consultas.length ? consultas.map(c => `<tr class="searchable"><td>${escapeHtml(c.pacienteNome || '-')}</td><td>${escapeHtml(c.medicoNome || '-')}<span class="subtext">${formatEspecialidade(c.medicoEspecialidade)}</span></td><td>${formatDate(c.dataHora)}</td><td>${badge(labelStatus(c.status), statusType(c.status))}</td><td>${c.status === 'AGENDADA' ? `<button class="button-danger" type="button" onclick="cancelarConsulta('${escapeHtml(c.id)}')">Cancelar</button>` : '-'}</td></tr>`).join('') : tableEmpty(5, 'Nenhuma consulta cadastrada.');
+  $('#wait-list').innerHTML = renderFila(roleScoped(state.fila));
+  fillSelect('#finish-appointment', roleScoped(state.consultas).filter(c => c.status === 'AGENDADA'), 'Selecione uma consulta', c => `${c.pacienteNome || 'Paciente'} com ${c.medicoNome || 'Médico'} — ${formatDate(c.dataHora)}`);
 }
 
 function renderTriagens() {
-  setText('#total-triagens', `${state.triagens.length} registro(s)`);
-  const ordered = [...state.triagens].sort((a,b) => new Date(b.dataHora || b.data || 0) - new Date(a.dataHora || a.data || 0));
+  const triagens = roleScoped(state.triagens);
+  setText('#total-triagens', `${triagens.length} registro(s)`);
+  const ordered = [...triagens].sort((a,b) => new Date(b.dataHora || b.data || 0) - new Date(a.dataHora || a.data || 0));
   $('#screenings-list').innerHTML = ordered.length ? ordered.map(t => `<article class="list-item searchable"><header><div><strong>${escapeHtml(t.pacienteNome || 'Paciente')}</strong><small>${escapeHtml(t.enfermeiroNome || 'Enfermeiro')} • ${formatDate(t.dataHora || t.data)}</small></div>${badge(t.prioridade || 'Prioridade', prioridadeType(t.prioridade))}</header><small><strong>Queixa:</strong> ${escapeHtml(t.queixaPrincipal || '-')}</small><small>Temp.: ${valueOr(t.temperatura)} • PA: ${valueOr(t.pressaoArterial)} • FC: ${valueOr(t.frequenciaCardiaca)}</small></article>`).join('') : emptyState('Nenhuma triagem registrada.');
 }
 
 function renderAvaliacoes() {
-  setText('#total-avaliacoes', `${state.avaliacoes.length} registro(s)`);
-  $('#reviews-list').innerHTML = state.avaliacoes.length ? state.avaliacoes.map(a => `<article class="review-card searchable"><header><div><strong>${escapeHtml(a.medicoNome || 'Médico')}</strong><small>${escapeHtml(a.pacienteNome || 'Paciente')}</small></div><span class="rating">${stars(a.estrelas)} ${a.estrelas || 0}★</span></header><p>${escapeHtml(a.texto || 'Sem comentário textual.')}</p></article>`).join('') : emptyState('Nenhuma avaliação registrada.');
+  const avaliacoes = roleScoped(state.avaliacoes);
+  setText('#total-avaliacoes', `${avaliacoes.length} registro(s)`);
+  $('#reviews-list').innerHTML = avaliacoes.length ? avaliacoes.map(a => `<article class="review-card searchable"><header><div><strong>${escapeHtml(a.medicoNome || 'Médico')}</strong><small>${escapeHtml(a.pacienteNome || 'Paciente')}</small></div><span class="rating">${stars(a.estrelas)} ${a.estrelas || 0}★</span></header><p>${escapeHtml(a.texto || 'Sem comentário textual.')}</p></article>`).join('') : emptyState('Nenhuma avaliação registrada.');
 }
 
 function renderContas() {
-  setText('#total-contas', `${state.contas.length} pendente(s)`);
-  $('#accounts-list').innerHTML = state.contas.length ? state.contas.map(c => {
+  const contas = roleScoped(state.contas);
+  setText('#total-contas', `${contas.length} pendente(s)`);
+  $('#accounts-list').innerHTML = contas.length ? contas.map(c => {
     const pacienteNome = c.pacienteNome || c.paciente?.nome || 'Paciente';
     const plano = c.paciente?.planoSaude?.nome || c.planoSaude || 'plano não informado';
     return `<article class="list-item searchable"><header><div><strong>${escapeHtml(pacienteNome)}</strong><small>Situação: ${escapeHtml(c.situacao || 'PENDENTE')} • Plano: ${escapeHtml(plano)}</small></div>${badge(money(c.valor), 'warn')}</header><small>${escapeHtml(c.descricao || 'Cobrança gerada porque apenas SUS é gratuito.')}</small></article>`;
@@ -255,14 +259,16 @@ function renderContas() {
 }
 
 function fillSelects() {
-  fillSelect('#appointment-patient', state.pacientes, 'Selecione um paciente', p => `${p.nome} — ${planoLabel(p)}`);
+  fillSelect('#appointment-patient', selectablePatients(), 'Selecione um paciente', p => `${p.nome} — ${planoLabel(p)}`);
   fillSelect('#appointment-doctor', state.medicos, 'Selecione um médico', m => `${m.nome} — ${formatEspecialidade(m.especialidade)}`);
-  fillSelect('#screening-patient', state.pacientes, 'Selecione um paciente', p => p.nome);
+  fillSelect('#screening-patient', selectablePatients(), 'Selecione um paciente', p => p.nome);
   fillSelect('#screening-nurse', state.session?.role === 'ENFERMEIRO' ? state.enfermeiros.filter(e => String(e.id) === String(state.session.userId)) : state.enfermeiros, 'Selecione um enfermeiro', e => `${e.nome} — ${e.coren || '-'}`);
-  fillSelect('#record-patient', state.pacientes, 'Selecione um paciente', p => p.nome);
+  fillSelect('#record-patient', selectablePatients(), 'Selecione um paciente', p => p.nome);
   fillSelect('#doctor-plan-filter', state.pacientes, 'Filtrar pelo plano de um paciente', p => `${p.nome} — ${planoLabel(p)}`);
-  fillSelect('#review-appointment', consultasRealizadas(), 'Selecione consulta realizada', c => `${c.pacienteNome || 'Paciente'} com ${c.medicoNome || 'Médico'} — ${formatDate(c.dataHora)}`);
-  fillSelect('#finish-appointment', state.consultas.filter(c => c.status === 'AGENDADA'), 'Selecione uma consulta', c => `${c.pacienteNome || 'Paciente'} com ${c.medicoNome || 'Médico'} — ${formatDate(c.dataHora)}`);
+  fillSelect('#review-appointment', roleScoped(consultasRealizadas()), 'Selecione consulta realizada', c => `${c.pacienteNome || 'Paciente'} com ${c.medicoNome || 'Médico'} — ${formatDate(c.dataHora)}`);
+  fillSelect('#finish-appointment', roleScoped(state.consultas).filter(c => c.status === 'AGENDADA'), 'Selecione uma consulta', c => `${c.pacienteNome || 'Paciente'} com ${c.medicoNome || 'Médico'} — ${formatDate(c.dataHora)}`);
+  applySingleOption('#appointment-patient');
+  applySingleOption('#screening-nurse');
 }
 
 function fillSelect(selector, items, placeholder, labelFn) {
@@ -276,6 +282,10 @@ function setupNavigation() {
   $$('.menu-item').forEach(btn => btn.addEventListener('click', () => goTo(btn.dataset.section)));
   $$('[data-go]').forEach(btn => btn.addEventListener('click', () => goTo(btn.dataset.go)));
   $('#sidebar-toggle')?.addEventListener('click', () => $('#sidebar').classList.toggle('open'));
+  document.addEventListener('click', event => {
+    if (window.innerWidth > 860 || !$('#sidebar')?.classList.contains('open')) return;
+    if (!event.target.closest('#sidebar') && !event.target.closest('#sidebar-toggle')) $('#sidebar').classList.remove('open');
+  });
 }
 
 function goTo(section) {
@@ -295,6 +305,7 @@ function setupForms() {
     const data = formData(form);
     const login = await apiRequest(`${API.auth}/login`, { method: 'POST', body: JSON.stringify({ cpf: data.cpf, senha: data.senha, perfil: data.perfil }) });
     state.session = { role: login.perfil, userId: login.usuarioId, nome: login.nome, cpf: login.cpf, token: login.token };
+    saveSession();
     form.reset();
     updateVisibility();
     renderAll();
@@ -303,6 +314,7 @@ function setupForms() {
   }, false);
   $('#presentation-login')?.addEventListener('click', () => {
     state.session = { role: 'APRESENTACAO', userId: null, nome: 'Modo apresentação', token: null };
+    saveSession();
     updateVisibility();
     renderAll();
     goTo('dashboard');
@@ -331,6 +343,11 @@ function setupForms() {
   $('#doctor-specialty-filter')?.addEventListener('change', renderMedicos);
 }
 
+function setupDefaults() {
+  const appointmentDate = $('#appointment-form input[name="dataHora"]');
+  if (appointmentDate) appointmentDate.min = localDateTimeInputValue(new Date());
+}
+
 function bindForm(selector, handler, reload = true) {
   const form = $(selector); if (!form) return;
   form.addEventListener('submit', async event => { event.preventDefault(); try { await handler(form); if (reload) await loadAll(); } catch (error) { showAlert(error.message, 'error'); } });
@@ -348,6 +365,8 @@ function renderProntuario(items) {
 function renderFila(items) { return items.length ? items.map((f, i) => `<article class="list-item searchable"><header><div><strong>#${i + 1} ${escapeHtml(f.pacienteNome || 'Paciente')}</strong><small>${escapeHtml(f.medicoNome || 'Médico')} • ${formatDate(f.dataConsulta || f.dataDesejada || f.dataHora)}</small></div>${badge('Aguardando', 'warn')}</header></article>`).join('') : emptyState('Lista de espera vazia.'); }
 
 function applyFilter(term) { const normalized = normalize(term); const active = $('.active-screen'); if (!active) return; active.querySelectorAll('.searchable').forEach(el => el.classList.toggle('filtered-out', normalized && !normalize(el.textContent).includes(normalized))); }
+function selectablePatients() { return state.session?.role === 'PACIENTE' ? state.pacientes.filter(p => String(p.id) === String(state.session.userId)) : state.pacientes; }
+function applySingleOption(selector) { const select = $(selector); if (!select) return; const values = Array.from(select.options).filter(option => option.value); if (values.length === 1) select.value = values[0].value; }
 function getLoggedUser() { if (!state.session) return null; const sources = { MEDICO: state.medicos, PACIENTE: state.pacientes, ENFERMEIRO: state.enfermeiros }; const source = sources[state.session.role] || []; return source.find(u => String(u.id) === String(state.session.userId)) || { nome: state.session.nome, cpf: state.session.cpf }; }
 function consultasRealizadas() { return state.consultas.filter(c => c.status === 'REALIZADA'); }
 function medicoMedia(id) { const reviews = state.avaliacoes.filter(a => String(a.medicoId) === String(id) || String(a.medico?.id) === String(id)); if (!reviews.length) return 0; return reviews.reduce((s,a) => s + Number(a.estrelas || 0), 0) / reviews.length; }
@@ -380,11 +399,13 @@ function decimalOrNull(v) { return v === '' || v === null || v === undefined ? n
 function normalize(t) { return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 function defaultSectionForRole(role) { return ({ PACIENTE: 'dashboard', MEDICO: 'consultas', ENFERMEIRO: 'triagens', APRESENTACAO: 'dashboard' })[role] || 'dashboard'; }
 function escapeHtml(v) { return String(v ?? '').replace(/[&<>'"]/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[ch])); }
+function localDateTimeInputValue(date) { return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16); }
+function saveSession() { if (state.session) localStorage.setItem('clinica.session', JSON.stringify(state.session)); }
+function loadSession() { try { return JSON.parse(localStorage.getItem('clinica.session') || 'null'); } catch (_) { return null; } }
 
-// A aplicação sempre inicia na tela de login.
-// Sessões anteriores não são restauradas para atender ao fluxo exigido na apresentação.
-localStorage.removeItem('clinica.session');
+state.session = loadSession();
 updateVisibility();
 setupNavigation();
 setupForms();
+setupDefaults();
 loadAll();

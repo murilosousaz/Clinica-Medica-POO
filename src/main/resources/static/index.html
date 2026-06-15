@@ -58,7 +58,7 @@
     </label>
     <button class="button" type="submit">Entrar</button>
     <button id="presentation-login" class="button button-secondary" type="button">Entrar em modo apresentação</button>
-    <small id="login-help">Use seu CPF e senha cadastrados, ou entre no modo apresentação.</small>
+    <small id="login-help" role="status" aria-live="polite">Use seu CPF e senha cadastrados, ou entre no modo apresentação.</small>
   </form>
 </section>
 
@@ -92,7 +92,7 @@
 
   <main class="content">
     <header class="topbar">
-      <button id="sidebar-toggle" class="icon-button" type="button">☰</button>
+      <button id="sidebar-toggle" class="icon-button" type="button" aria-label="Abrir menu de navegação" aria-controls="sidebar">☰</button>
       <div class="title-block">
         <h1 id="page-title">Dashboard</h1>
         <p id="page-description">Visão geral dos dados.</p>
@@ -103,7 +103,7 @@
       </div>
     </header>
 
-    <section id="alert" class="alert hidden"></section>
+    <section id="alert" class="alert hidden" role="status" aria-live="polite"></section>
 
       <section id="dashboard" class="screen active-screen">
         <div class="hero-card">
@@ -243,7 +243,7 @@
           <h3>Agendar consulta</h3>
           <label>Paciente<select id="appointment-patient" name="pacienteId" required></select></label>
           <label>Médico<select id="appointment-doctor" name="medicoId" required></select></label>
-          <label>Data e hora<input name="dataHora" type="datetime-local" required /></label>
+          <label>Data e hora<input name="dataHora" type="datetime-local" autocomplete="off" required /></label>
           <label>Descrição inicial<textarea name="observacoes"></textarea></label>
           <button class="button" type="submit">Agendar</button>
         </form>
